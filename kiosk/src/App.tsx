@@ -1,35 +1,77 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import React, { useState } from 'react';
+import Home from './components/Home';
+import MenuCategories from './components/MenuCategories';
+import MenuItems from './components/MenuItems';
+import ItemDetails from './components/ItemDetails';
+import Cart from './components/Cart';
+import Payment from './components/Payment';
+import OrderConfirmation from './components/OrderConfirmation';
 
-function App() {
-  const [count, setCount] = useState(0)
-
-  return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit1312323232323 <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+interface Item {
+  id: number;
+  name: string;
+  price: number;
 }
 
-export default App
+const App: React.FC = () => {
+  const [currentScreen, setCurrentScreen] = useState<string>('Home');
+  const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
+  const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+  const [cart, setCart] = useState<Item[]>([]);
+
+  const navigateTo = (screen: string, data?: any) => {
+    switch (screen) {
+      case 'MenuCategories':
+        setCurrentScreen('MenuCategories');
+        break;
+      case 'MenuItems':
+        setSelectedCategory(data);
+        setCurrentScreen('MenuItems');
+        break;
+      case 'ItemDetails':
+        setSelectedItem(data);
+        setCurrentScreen('ItemDetails');
+        break;
+      case 'Cart':
+        setCurrentScreen('Cart');
+        break;
+      case 'Payment':
+        setCurrentScreen('Payment');
+        break;
+      case 'OrderConfirmation':
+        setCurrentScreen('OrderConfirmation');
+        break;
+      default:
+        setCurrentScreen('Home');
+    }
+  };
+
+  const addToCart = (item: Item) => {
+    setCart([...cart, item]);
+    navigateTo('MenuCategories');
+  };
+
+  const removeFromCart = (itemId: number) => {
+    setCart(cart.filter(item => item.id !== itemId));
+  };
+  
+
+  return (
+    <div className="App">
+      <div className="left-section">
+      <Cart cartItems={cart} removeFromCart={removeFromCart} navigateTo={navigateTo} />
+      </div>
+      <div className="right-section">
+        {currentScreen === 'Home' && <Home navigateTo={navigateTo} />}
+        {currentScreen === 'MenuCategories' && <MenuCategories navigateTo={navigateTo} />}
+        {currentScreen === 'MenuItems' && selectedCategory && <MenuItems category={selectedCategory} navigateTo={navigateTo} />}
+        {currentScreen === 'ItemDetails' && selectedItem && <ItemDetails item={selectedItem} addToCart={addToCart} navigateTo={navigateTo} />}
+        {currentScreen === 'Cart' && <Cart cartItems={cart} removeFromCart={removeFromCart} navigateTo={navigateTo} />}
+        {currentScreen === 'Payment' && <Payment navigateTo={navigateTo} />}
+        {currentScreen === 'OrderConfirmation' && <OrderConfirmation />}
+      </div>
+    </div>
+  );
+};
+
+export default App;
