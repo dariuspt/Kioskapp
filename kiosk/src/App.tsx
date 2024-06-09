@@ -1,16 +1,20 @@
-import {Routes, Route} from 'react-router-dom'
-import { ChooseScreen, Home, Products, StartingScreen } from './_root/pages';
-import "./global.css";
+import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import StartingScreen from './_root/pages/StartingScreen';
+import Home from './_root/pages/Home';
+import './global.css';
+import ChooseScreen from './_root/pages/ChooseScreen';
 
-const App = () => {
-  return(
-    <Routes>
-      <Route path='/' element={<StartingScreen/>} index/>
-      <Route path='/choice' element={<ChooseScreen/>} index/>
-      <Route path='/home' element={<Home/>}/>
-      <Route path='/product' element={<Products/>}/>
-    </Routes>
+function App() {
+  return (
+    <Router>
+      <Routes>
+        <Route path="/" element={<StartingScreen />} />
+        <Route path="/choose" element={<ChooseScreen />} />
+        <Route path="/home" element={<Home />} />
+        <Route path="/StartingScreen" element={<StartingScreen />} />
+      </Routes>
+    </Router>
   );
-};
+}
 
 export default App;
