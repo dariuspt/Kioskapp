@@ -6,6 +6,12 @@ import Item from '../components/Item';
 import HorizontalScrollBar from '../components/HorizontalScrollBar';
 import AddToCartModal from '../components/AddToCartModal';
 import DeleteItemModal from '../components/DeleteItemModal';
+import { 
+  fetchItems, 
+  calculateTotalAmount, 
+  filterItems, 
+  navigateToStartingScreen 
+} from '../../constants/constants';
 import '../../global.css';  // Ensure this import path to global.css
 
 interface Item {
@@ -26,28 +32,25 @@ const Home: React.FC = () => {
   const [itemToDelete, setItemToDelete] = useState<string | null>(null);
 
   useEffect(() => {
-    fetch('/items.json')
-      .then(response => response.json())
+    fetchItems()
       .then(data => setItems(data))
       .catch(error => console.error('Error fetching items:', error));
   }, []);
 
-  const gotoStart = () => {
-    navigate('/StartingScreen');
-  };
-
-  const addItemToCart = (item: Item) => {
-    const existingItem = cart.find((cartItem) => cartItem.name === item.name);
-    if (existingItem) {
-      setCart(cart.map((cartItem) =>
-        cartItem.name === item.name
-          ? { ...cartItem, quantity: cartItem.quantity + 1 }
-          : cartItem
-      ));
-    } else {
-      setCart([...cart, { ...item, quantity: 1 }]);
+  const handleAddItemToCart = () => {
+    if (selectedItem) {
+      const existingItem = cart.find((cartItem) => cartItem.name === selectedItem.name);
+      if (existingItem) {
+        setCart(cart.map((cartItem) =>
+          cartItem.name === selectedItem.name
+            ? { ...cartItem, quantity: cartItem.quantity + 1 }
+            : cartItem
+        ));
+      } else {
+        setCart([...cart, { ...selectedItem, quantity: 1 }]);
+      }
+      setShowAddModal(false); // Close the modal after adding the item
     }
-    setShowAddModal(false);
   };
 
   const handleDeleteItem = () => {
@@ -70,12 +73,9 @@ const Home: React.FC = () => {
 
   const categories = ['All', ...new Set(items.map(item => item.category))];
 
-  const filteredItems = items.filter((item) =>
-    (selectedCategory === 'All' || item.category === selectedCategory) &&
-    item.name.toLowerCase().includes(search.toLowerCase())
-  );
+  const filteredItems = filterItems(items, search, selectedCategory);
 
-  const totalAmount = cart.reduce((total, item) => total + item.quantity * item.price, 0);
+  const totalAmount = calculateTotalAmount(cart);
 
   return (
     <div className="grid grid-rows-5 h-screen w-screen p-6 bg-gray-100">
@@ -102,7 +102,7 @@ const Home: React.FC = () => {
         <Cart
           cart={cart}
           onDelete={(name) => { setItemToDelete(name); setShowDeleteModal(true); }}
-          onCancel={gotoStart}
+          onCancel={() => navigateToStartingScreen(navigate)}
           totalAmount={totalAmount}
           onPlaceOrder={handlePlaceOrder}
         />
@@ -111,7 +111,7 @@ const Home: React.FC = () => {
       {showAddModal && selectedItem && (
         <AddToCartModal
           item={selectedItem}
-          onConfirm={() => addItemToCart(selectedItem)}
+          onConfirm={handleAddItemToCart}
           onCancel={() => setShowAddModal(false)}
         />
       )}
