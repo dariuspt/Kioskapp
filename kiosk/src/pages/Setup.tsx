@@ -9,7 +9,7 @@ const Setup = () => {
   const navigate = useNavigate();
 
   const handleNavigation = (id: string) => {
-    navigate(`/${id}/menu`);
+    navigate(`/${id}`);
   };
 
   return (

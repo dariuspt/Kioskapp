@@ -3,7 +3,7 @@ import { Routes } from "../types/routes";
 
 const User_Routes: Routes =[
     {
-        path: "/user/menu",
+        path: "/user",
         element: <UserMenu/>
     }
 ]
