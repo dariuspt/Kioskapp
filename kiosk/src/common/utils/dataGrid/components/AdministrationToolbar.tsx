@@ -6,16 +6,17 @@ import {
 } from "@mui/x-data-grid";
 import { Box, Button, Grid, LinearProgress } from "@mui/material";
 import { useTranslation } from "react-i18next";
-import { QuickFilter } from "./quickFilter/QuickFilter";
-import { CustomStack } from "./customStack/CustomStack";
+import { QuickFilter } from "./quickFilter/QuickFilter"; 
+import { CustomStack } from "./customStack/CustomStack"; 
 import { datagridStyles } from "@/styles/styles";
 
 const AdministrationToolbar = ({ onCreate, buttonLabel }) => {
   const { t } = useTranslation();
+
   return (
-    <GridToolbarContainer>
+    <GridToolbarContainer sx={datagridStyles.toolbarContainer}>
       <Grid container>
-        <Grid item>
+        <Grid item xs={12} sm="auto">
           <GridToolbarColumnsButton />
           <GridToolbarFilterButton />
           <GridToolbarDensitySelector />
@@ -24,14 +25,16 @@ const AdministrationToolbar = ({ onCreate, buttonLabel }) => {
           <QuickFilter />
         </Grid>
         <Grid item xs={12} sm="auto">
-          <Button
-            color="primary"
-            variant="contained"
-            onClick={onCreate}
-            size="small"
-          >
-            {buttonLabel || t("create")}
-          </Button>
+          {onCreate && (
+            <Button
+              color="primary"
+              variant="contained"
+              onClick={onCreate}
+              size="small"
+            >
+              {buttonLabel || t("create")}
+            </Button>
+          )}
         </Grid>
       </Grid>
     </GridToolbarContainer>

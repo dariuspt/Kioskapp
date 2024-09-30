@@ -15,14 +15,15 @@ interface Props {
 const CardCategories = ({ sx, title, images, onClick }: Props) => {
   return (
     <Card sx={sx} elevation={5} onClick={onClick}>
-      <CardMedia  sx={{ height: 240, width:320 }} image={images} title={title} />
+      <CardMedia
+        image={images}
+        title={title}
+        height="210"
+        component="img"
+        sx={{ objectFit: "contain", justifyContent: "center", }}
+      />
       <CardContent>
-        <Typography
-          gutterBottom
-          variant="h5"
-          component="div"
-          sx={sx}
-        >
+        <Typography gutterBottom variant="h5" component="div" sx={sx}>
           {title}
         </Typography>
       </CardContent>

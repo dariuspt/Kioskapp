@@ -2,11 +2,13 @@ import { Grid } from "@mui/material";
 import { products } from "./dummyProducts";
 import { ProductCard } from "./ProductCard";
 import { useNavigate } from "react-router-dom";
+import { slugify } from "@/common/utils/urlCleaner";
 
-const GridProducts = () => {
+const GridProducts = ({ addToCart }) => {
   const navigate = useNavigate();
   const handleClick = (id) => {
-    navigate(`/product/${id}`);
+    const slug = slugify(id);
+    navigate(`/product/${slug}`);
   };
   return (
     <Grid
@@ -16,13 +18,16 @@ const GridProducts = () => {
         flexGrow: 1,
         display: "flex",
         justifyContent: "center",
-        alignItems: "center",
-        mt: 10,
+        alignItems: "flex-end",
       }}
     >
       {products.map((product, index) => (
         <Grid item key={index}>
-          <ProductCard product={product} onClick={() => handleClick(product.title)} />
+          <ProductCard
+            product={product}
+            onClick={() => handleClick(product.title)}
+            addToCart={addToCart}
+          />
         </Grid>
       ))}
     </Grid>

@@ -3,13 +3,41 @@ import { useDatagridData } from "./useDatagridData";
 import { DataGrid } from "@mui/x-data-grid";
 import { datagridStyles } from "@/styles/styles";
 import { administrationToolbar } from "@/common/utils/dataGrid/components/AdministrationToolbar";
+import { FormProvider, useForm } from "react-hook-form";
+import { ProductsInterface as Produse } from "@/resources/adminProduct";
+import { DevTool } from "@hookform/devtools";
+import { useSnackbar } from "notistack";
 
 const Products = () => {
-  const { data } = useDatagridData();
-  const createRow: any = null;
+  const { enqueueSnackbar } = useSnackbar();
+  const methods = useForm<Produse>({ defaultValues: {}, mode: "all" });
+  const { data, createRow } = useDatagridData({
+    onFetchError: () => {
+      enqueueSnackbar(("entryGetError"), { variant: "error" });
+    },
+    onCreateError: () => {
+      enqueueSnackbar(("errorCreateLocation"), { variant: "error" });
+    },
+    onCreateSuccess: () => {
+      enqueueSnackbar(("successCreateLocation"), { variant: "success" });
+    },
+    onUpdateError: () => {
+      enqueueSnackbar(("errorUpdateLocation"), { variant: "error" });
+    },
+    onUpdateSuccess: () => {
+      enqueueSnackbar(("successUpdateLocation"), { variant: "success" });
+    },
+    onDeleteError: () => {
+      enqueueSnackbar(("errorDeleteLocation"), { variant: "error" });
+    },
+    onDeleteSuccess: () => {
+      enqueueSnackbar(("successDeleteLocation"), { variant: "success" });
+    },
+    formMethods: methods,
+  });
   return (
-    <Grid>
-      <Paper sx={datagridStyles.paperContent}>
+    <Paper sx={datagridStyles.paperContent}>
+      <FormProvider {...methods}>
         <DataGrid
           {...data}
           pagination
@@ -21,8 +49,9 @@ const Products = () => {
           }}
           disableRowSelectionOnClick
         />
-      </Paper>
-    </Grid>
+        <DevTool control={methods.control} />
+      </FormProvider>
+    </Paper>
   );
 };
 

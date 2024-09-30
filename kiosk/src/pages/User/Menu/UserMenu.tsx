@@ -1,58 +1,94 @@
-import { Grid, Typography } from "@mui/material";
+import { Box, Container, Grid, Typography } from "@mui/material";
 
 import TopCategories from "./topCategories/TopCategories";
 import UserSidebar from "./sideBar/UserSidebar";
 import CarouselProducts from "./Carousel/Carousel";
+import SearchBar from "./SearchBar/SearchBar";
+import { useState } from "react";
+import Cart from "../Cart/Cart";
+import { Product } from "./Product";
 
 const UserMenu = () => {
-  
+  const [cartItems, setCartItems] = useState<Product[]>([]);
+
+  const addToCart = (product: Product) => {
+    const existingProduct = cartItems.find((item) => item.id === product.id);
+
+    if (existingProduct) {
+      // If the product is already in the cart, update the quantity
+      setCartItems(
+        cartItems.map((item) =>
+          item.id === product.id
+            ? { ...item, quantity: (item.quantity || 0) + 1 } // Increment quantity if it exists
+            : item
+        )
+      );
+    } else {
+      // If the product is not in the cart, add it with quantity 1
+      setCartItems([...cartItems, { ...product, quantity: 1 }]);
+    }
+  };
+
   return (
-    <Grid container spacing={2} sx={{ padding: 2 }}>
-      <Grid item>
-        <UserSidebar />
-      </Grid>
+    <Container
+      maxWidth="xl"
+      sx={{ display: "flex", height: "100%"}}
+    >
+      <Grid container spacing={2}>
+        {/* Left Side - User Sidebar */}
+        <Grid item xs={1}>
+          <UserSidebar />
+        </Grid>
 
-      <Grid
-        item
-        xs={12}
-        sm={12}
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          marginTop: 30,
-          height: "20vh",
-        }}
-      >
-        <TopCategories />
-      </Grid>
+        {/* Middle - SearchBar, TopCategories, CarouselProducts */}
+        <Grid
+          item
+          xs={8} // Reduced to 7 columns to allow more space on the right
+          sx={{
+            display: "flex",
+            flexDirection: "column",
+            marginRight: 10, // Adds some space between middle and right section
+          }}
+        >
+          <Box sx={{ width: "100%" }}>
+            <SearchBar addToCart={addToCart} />
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "start",
+              marginTop: 1,
+              marginBottom: 3,
+              width: "100%",
+            }}
+          >
+            <TopCategories />
+          </Box>
 
-      <Grid
-        item
-        xs={12}
-        sx={{
-          display: "flex",
-          marginTop: 15,
-          flexGrow: 1,
-          marginLeft: 50,
-          width: "100%",
+          <Typography variant="h5" sx={{ marginBottom: 2 }}>
+            Top Produse
+          </Typography>
+          <Box sx={{ width: "100%" }}>
+            <CarouselProducts addToCart={addToCart} />
+          </Box>
+        </Grid>
 
-        }}
-      >
-        <Typography variant="h5">Top Produse</Typography>
+        {/* Right Side - Cart */}
+        <Grid
+          item
+          xs={2} // Adjusted to make it narrower
+          sx={{
+            borderLeft: "1px solid #e0e0e0",
+            display: "flex",
+            flexDirection: "column",
+            justifyContent: "flex-start",
+          }}
+        >
+          <Cart cartItems={cartItems} setCartItems={setCartItems} />
+        </Grid>
       </Grid>
-      <Grid
-        item
-        sx={{
-          marginLeft: 45,
-          width: "100%",
-          overflowX: "hidden",
-          marginTop: 5,
-        }}
-      >
-        <CarouselProducts />
-      </Grid>
-    </Grid>
+    </Container>
   );
 };
 

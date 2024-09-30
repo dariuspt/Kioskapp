@@ -1,9 +1,10 @@
 import { Grid } from "@mui/material";
-import { products } from "./dummyData";
 import { ProductCard } from "@/components/GridProducts/ProductCard";
 import Carousel from "react-multi-carousel";
 import "react-multi-carousel/lib/styles.css";
 import { useNavigate } from "react-router-dom";
+import { slugify } from "@/common/utils/urlCleaner";
+import { useProducts } from "@/resources/userProduct";
 
 const responsive = {
   desktop: {
@@ -23,29 +24,45 @@ const responsive = {
   },
 };
 
-const CarouselProducts = () => {
+const CarouselProducts = ({ addToCart }) => {
+  const { products, isLoading, isError } = useProducts();
   const navigate = useNavigate();
+
   const handleClick = (id) => {
-    navigate(`/product/${id}`);
+    const slug = slugify(id);
+    navigate(`/product/${slug}`);
   };
+
+  if (isLoading) {
+    return <p>Loading products...</p>; // Display loading state while fetching
+  }
+
+  if (isError) {
+    return <p>Error loading products...</p>; // Display error state if fetch fails
+  }
+
+  if (!products || products.length === 0) {
+    return <p>No products available.</p>; // Handle empty products array or undefined products
+  }
+
   return (
     <Grid
       container
       sx={{
         width: "100%",
-        height: "100%",
-        overflow: "hidden", 
+        overflow: "hidden",
       }}
     >
       <Grid item xs={12}>
         <Carousel
-          responsive={responsive}
+          responsive={responsive} // Ensure the responsive config is defined
           autoPlay={true}
           swipeable={true}
           draggable={true}
           infinite={true}
           showDots={true}
-          partialVisible={false}
+          arrows={true}
+          partialVisible={true}
         >
           {products.map((product, index) => (
             <Grid
@@ -56,9 +73,14 @@ const CarouselProducts = () => {
                 display: "flex",
                 justifyContent: "center",
                 alignItems: "center",
+                flexGrow: 1,
               }}
             >
-              <ProductCard product={product} onClick={() => handleClick(product.title)} />
+              <ProductCard
+                product={product}
+                onClick={() => handleClick(product.name)}
+                addToCart={() => addToCart(product)}
+              />
             </Grid>
           ))}
         </Carousel>
