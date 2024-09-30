@@ -1,42 +1,33 @@
 import {
   Card,
   CardContent,
-  Grid,
-  Box,
   SxProps,
-  CardActionArea,
+  Typography,
+  CardMedia,
 } from "@mui/material";
-import CardHeader from "./CardHeader";
-import { classes } from "./styles";
-
 interface Props {
   sx?: SxProps;
   title: string;
-  startIcon?: JSX.Element;
-  children?: any;
   onClick?: () => any;
+  images?: any;
 }
 
-const StepperCard = ({
-  sx = classes.card as SxProps,
-  title,
-  children,
-  startIcon,
-  onClick,
-}: Props) => {
+const CardCategories = ({ sx, title, images, onClick }: Props) => {
   return (
-    <Box>
-      <Card sx={sx}>
-        <CardHeader title={title} startIcon={startIcon} />
-        <CardActionArea onClick={onClick}>
-          <CardContent>
-            <Grid container spacing={2}>
-              {children}
-            </Grid>
-          </CardContent>
-        </CardActionArea>
-      </Card>
-    </Box>
+    <Card sx={sx} elevation={5} onClick={onClick}>
+      <CardMedia
+        image={images}
+        title={title}
+        height="210"
+        component="img"
+        sx={{ objectFit: "contain", justifyContent: "center", }}
+      />
+      <CardContent>
+        <Typography gutterBottom variant="h5" component="div" sx={sx}>
+          {title}
+        </Typography>
+      </CardContent>
+    </Card>
   );
 };
-export default StepperCard;
+export default CardCategories;
