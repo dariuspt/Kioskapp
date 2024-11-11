@@ -1,17 +1,29 @@
-import { Drawer, MenuItem, Typography, SxProps, useMediaQuery, IconButton } from "@mui/material";
+import {
+  Drawer,
+  MenuItem,
+  Typography,
+  SxProps,
+  useMediaQuery,
+  IconButton,
+  Button,
+} from "@mui/material";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import MenuIcon from '@mui/icons-material/Menu';
+import MenuIcon from "@mui/icons-material/Menu";
+import ArrowBackIcon from "@mui/icons-material/ArrowBack";
 
 interface SidebarProps {
   width?: number;
   children?: React.ReactNode;
   sx?: SxProps | any;
+  back?: boolean;
 }
 
-const Sidebar = ({ children, sx }: SidebarProps) => {
+const Sidebar = ({ children,  back }: SidebarProps) => {
   const navigate = useNavigate();
-  const isSmallScreen = useMediaQuery("(max-width: 1024px) and (max-height: 1366px)");
+  const isSmallScreen = useMediaQuery(
+    "(max-width: 1024px) and (max-height: 1366px)"
+  );
   const [open, setOpen] = useState(!isSmallScreen);
 
   const toggleDrawer = () => {
@@ -19,14 +31,29 @@ const Sidebar = ({ children, sx }: SidebarProps) => {
   };
 
   const handleClick = (id: string) => {
-    if (id === "orders") {
-      navigate("/orders");
+    const routes: { [key: string]: string } = {
+      products: "/products",
+      categories: "/categories",
+      subCategory: "/subCategory",
+      // orders: "/orders",
+    };
+
+    if (routes[id]) {
+      navigate(routes[id]);
     } else {
-      navigate("/products");
+      console.warn(`Unknown navigation target: ${id}`);
     }
-    // If it's a temporary drawer, close it after selection
+
+    // Close the drawer if on a small screen
     if (isSmallScreen) {
       toggleDrawer();
+    }
+  };
+
+  const handleBackClick = () => {
+    const id = null;
+    if (id !== "admin") {
+      navigate("/admin");
     }
   };
 
@@ -50,24 +77,35 @@ const Sidebar = ({ children, sx }: SidebarProps) => {
         open={open}
         onClose={toggleDrawer} // Handle close for temporary drawer
         sx={{
-          width: isSmallScreen ? 0 : 240, // Hide width when closed on small screens
-          position: "flex",
+          width: open ? 200 : 60, // Sidebar width (200px when open, 60px when closed)
+          flexShrink: 0,
+          [`& .MuiDrawer-paper`]: {
+            width: open ? 200 : 60,
+            boxSizing: "border-box",
+            transition: "width 0.3s ease", // Smooth transition when resizing
+          },
         }}
       >
         {!children ? (
           <>
+            {back && (
+              <Button onClick={handleBackClick}>
+                <ArrowBackIcon />
+              </Button>
+            )}
             <MenuItem
               id="products"
-              sx={{ marginTop: 5, marginBottom: 5 }}
+              sx={{ marginTop: 2, marginBottom: 2 }}
               onClick={() => handleClick("products")}
             >
-              <Typography variant="h5">Products</Typography>
+              <Typography variant="body1">Products</Typography>
             </MenuItem>
-            <MenuItem id="orders" onClick={() => handleClick("orders")}>
-              <Typography variant="h5">Orders</Typography>
-            </MenuItem>
-            <MenuItem id="categories" onClick={() => handleClick("categories")}>
-              <Typography variant="h5">Categories</Typography>
+            <MenuItem
+              id="categories"
+              sx={{ marginTop: 2, marginBottom: 2 }}
+              onClick={() => handleClick("categories")}
+            >
+              <Typography variant="body1">Categories</Typography>
             </MenuItem>
           </>
         ) : (
@@ -77,6 +115,5 @@ const Sidebar = ({ children, sx }: SidebarProps) => {
     </>
   );
 };
-
 
 export default Sidebar;

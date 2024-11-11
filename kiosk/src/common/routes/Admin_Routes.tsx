@@ -2,7 +2,7 @@
 import Products from "@/pages/Admin/Products/Products";
 import { Routes } from "../types/routes";
 import AdminMenu from "@/pages/Admin/AdminMenu";
-import Orders from "@/pages/Admin/Orders/Orders";
+import Categories from "@/pages/Admin/Categories/Categories";
 
 const Admin_Routes: Routes = [
   {
@@ -14,8 +14,8 @@ const Admin_Routes: Routes = [
     element: <Products />,
   },
   {
-    path: "/orders",
-    element: <Orders />,
+    path: "/categories",
+    element: <Categories />,
   },
 ];
 

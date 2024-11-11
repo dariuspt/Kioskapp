@@ -12,16 +12,19 @@ export interface Products {
   description: string;
   price: number;
   stock: number;
-  category: string;
+  category_name: string;
   subcategory: string;
+  is_top_product: boolean,
   image_url: string | null;
 }
 interface Product {
   getProducts: () => Promise<Products[]>;
+  getOne: (name: string) => Promise<Products>
 }
 
 export const ProductsService: Product = {
   getProducts: () => Api(service).get(route),
+  getOne: (name: string) => Api(service).get(`${route}/${name}`)
 };
 
 export const useProducts = () => {

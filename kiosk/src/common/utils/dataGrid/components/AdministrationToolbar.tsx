@@ -5,13 +5,11 @@ import {
   GridToolbarFilterButton,
 } from "@mui/x-data-grid";
 import { Box, Button, Grid, LinearProgress } from "@mui/material";
-import { useTranslation } from "react-i18next";
 import { QuickFilter } from "./quickFilter/QuickFilter"; 
 import { CustomStack } from "./customStack/CustomStack"; 
 import { datagridStyles } from "@/styles/styles";
 
 const AdministrationToolbar = ({ onCreate, buttonLabel }) => {
-  const { t } = useTranslation();
 
   return (
     <GridToolbarContainer sx={datagridStyles.toolbarContainer}>
@@ -32,7 +30,7 @@ const AdministrationToolbar = ({ onCreate, buttonLabel }) => {
               onClick={onCreate}
               size="small"
             >
-              {buttonLabel || t("create")}
+              {buttonLabel || ("create")}
             </Button>
           )}
         </Grid>
@@ -49,7 +47,6 @@ export const administrationToolbar = {
 };
 
 const SuggestionsToolbar = ({ onCreate, buttonLabel, title }) => {
-  const { t } = useTranslation();
   return (
     <GridToolbarContainer sx={datagridStyles.cardHeader}>
       <Grid container>
@@ -65,7 +62,7 @@ const SuggestionsToolbar = ({ onCreate, buttonLabel, title }) => {
             onClick={onCreate}
             size="small"
           >
-            {buttonLabel || t("create")}
+            {buttonLabel || ("create")}
           </Button>
         </Grid>
       </Grid>

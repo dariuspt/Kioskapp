@@ -1,31 +1,20 @@
 import { getDatagridActions } from "@/common/utils/dataGrid/actions/getDatagridAction";
 import { renderDataGridCellExpand } from "@/common/utils/dataGrid/helpers";
-import { GridCellExpand } from "@/components/gridCellExpand.tsx/GridCellExpand";
 import FormInputFile from "@/components/react-hook-form-elements/FormInputFile";
 import FormSelect from "@/components/react-hook-form-elements/FormSelect";
-import { BasicRenderOption, CheckboxOption } from "@/components/react-hook-form-elements/formSelect/RenderOption";
+import {
+  BasicRenderOption,
+  CheckboxOption,
+} from "@/components/react-hook-form-elements/formSelect/RenderOption";
 import GridCheckboxInput from "@/components/react-hook-form-elements/GridCheckboxInput";
 import GridFormInputText from "@/components/react-hook-form-elements/GridFormInputText";
-import { useCategories } from "@/resources/adminCategories";
-import { Typography } from "@mui/material";
-import { GridColDef, GridRowModes} from "@mui/x-data-grid";
-import { enqueueSnackbar } from "notistack";
+import { Box, Typography } from "@mui/material";
+import { GridColDef, GridRowModes } from "@mui/x-data-grid";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
-
-export const fetchCastedCategories = () => {
-  const { categories: categories } = useCategories({
-    onError: () => {
-      enqueueSnackbar("Cannot fetch categories"), { variant: "error" };
-    },
-  });
-  return categories.map((categorie) => {
-    return {
-      id: categorie.id,
-      name: categorie.name,
-    };
-  });
-};
+import { CategoryService } from "@/resources/adminCategories";
+import { fetchCastedCategories } from "../Products/useColumns";
+import { useSubcategories } from "./utils";
 
 const GridTextField = ({ field, id }) => {
   const { control, trigger } = useFormContext();
@@ -69,13 +58,13 @@ const renderCheckboxCell = (params) => {
   return <GridCheckbox field={field} id={id} />;
 };
 
-const GridDropdown = ({ field, id, multiple }) => {
+const GridDropdown = ({ field, id, multiple, categoryId }) => {
   const { control } = useFormContext();
   const name = `${id}.${field}`;
-  const categories = fetchCastedCategories();
+  const { subcategories, loading } = useSubcategories(categoryId);
   return (
     <FormSelect
-      options={categories}
+      options={subcategories}
       label=""
       name={name}
       multiple={multiple}
@@ -105,8 +94,17 @@ const GridDropdown = ({ field, id, multiple }) => {
 
 const renderDropdownCell = (params) => {
   const { field, id } = params;
+  const categoryId = params.row.id;
+  console.log('categoryId')
 
-  return <GridDropdown field={field} id={id} multiple={false} />;
+  return (
+    <GridDropdown
+      field={field}
+      id={id}
+      multiple={false}
+      categoryId={categoryId}
+    />
+  );
 };
 
 export const useColumns = ({
@@ -128,15 +126,6 @@ export const useColumns = ({
       renderCell: renderDataGridCellExpand,
     },
     {
-      field: "producer",
-      headerName: "Producer",
-      flex: 1,
-      minWidth: 320,
-      editable: true,
-      renderEditCell: renderTextfieldCell,
-      renderCell: renderDataGridCellExpand,
-    },
-    {
       field: "description",
       headerName: "Description",
       flex: 1,
@@ -145,42 +134,6 @@ export const useColumns = ({
       renderEditCell: renderTextfieldCell,
       renderCell: renderDataGridCellExpand,
     },
-    {
-      field: "price",
-      headerName: "Price",
-      flex: 1,
-      minWidth: 120,
-      editable: true,
-      renderEditCell: renderTextfieldCell,
-      renderCell: renderDataGridCellExpand,
-    },
-    {
-      field: "stock",
-      headerName: "Stock",
-      flex: 1,
-      minWidth: 120,
-      editable: true,
-      renderEditCell: renderTextfieldCell,
-      renderCell: renderDataGridCellExpand,
-    },
-    {
-      field: "category_name",
-      headerName: "Category",
-      flex: 1,
-      minWidth: 120,
-      editable: true,
-      renderEditCell: renderDropdownCell,
-      renderCell: renderDataGridCellExpand,
-    },
-    // {
-    //   field: "subcategory",
-    //   headerName: "Subcategory",
-    //   flex: 1,
-    //   editable: true,
-    //   minWidth: 100,
-    //   renderEditCell: renderTextfieldCell,
-    //   renderCell: renderDataGridCellExpand,
-    // },
     {
       field: "image",
       headerName: "Image",
@@ -193,33 +146,58 @@ export const useColumns = ({
       },
       renderCell: (params) => {
         const imageUrl = params.row.image_url;
-        return imageUrl ? (
-          <img
-            src={imageUrl}
-            alt="Product"
-            style={{
-              width: "100%",
+        return (
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
               height: "100%",
-              objectFit: "contain",
-              maxHeight: "100%",
+              width: "100%",
             }}
-          />
-        ) : (
-          <Typography variant="body2" color="textSecondary">
-            No Image
-          </Typography>
+          >
+            {imageUrl ? (
+              <img
+                src={imageUrl}
+                alt="Product"
+                style={{
+                  maxWidth: "100%",
+                  maxHeight: "100%",
+                  objectFit: "contain",
+                }}
+              />
+            ) : (
+              <Typography
+                variant="body2"
+                color="textSecondary"
+                sx={{
+                  textAlign: "center",
+                }}
+              >
+                No Image
+              </Typography>
+            )}
+          </Box>
         );
       },
     },
     {
-      field: "is_top_product",
-      headerName: "Top Produs",
+      field: "subcategory",
+      headerName: "Subcategory",
+      flex: 1,
+      editable: true,
+      minWidth: 100,
+      renderEditCell: renderDropdownCell,
+      renderCell: renderDataGridCellExpand,
+    },
+    {
+      field: "is_top_category",
+      headerName: "Top Categorie",
       flex: 1,
       editable: true,
       type: "boolean",
       minWidth: 100,
       renderEditCell: renderCheckboxCell,
-      // renderCell: renderDataGridCellExpand,
     },
     {
       field: "actions",

@@ -13,12 +13,17 @@ import {
   Paper,
 } from "@mui/material";
 import SearchIcon from "@mui/icons-material/Search";
-import { productList } from "./productList";
 import { useNavigate } from "react-router-dom";
 import { slugify } from "@/common/utils/urlCleaner";
+import { useProducts } from "@/resources/userProduct";
+import Loader from "@/components/loader/Loader";
+import { useCart } from "../../Cart/CartContex";
 
-const SearchBar = ({ addToCart }) => {
+const SearchBar = () => {
   const navigate = useNavigate();
+  const { products, isLoading, isError } = useProducts();
+  const { addToCart } = useCart();
+
 
   const handleClick = (id) => {
     const slug = slugify(id);
@@ -27,6 +32,13 @@ const SearchBar = ({ addToCart }) => {
   };
 
   const [searchValue, setSearchValue] = useState("");
+  if (isLoading) {
+    return <Loader/>;
+  }
+
+  if (isError) {
+    return <p>Error loading products...</p>; // Display error state if fetch fails
+  }
 
   return (
     <Box sx={{ padding: 2 }}>
@@ -34,7 +46,7 @@ const SearchBar = ({ addToCart }) => {
         <Grid item xs={10} sm={8}>
           <Autocomplete
             freeSolo
-            options={productList}
+            options={products}
             getOptionLabel={(option) =>
               typeof option === "string" ? option : option.name
             }
@@ -103,7 +115,7 @@ const SearchBar = ({ addToCart }) => {
                     color="success"
                     onClick={(event) => {
                       event.stopPropagation();
-                      addToCart(option);
+                      addToCart(addToCart);
                       setSearchValue("");
                     }} // Add to cart on click
                     sx={{
