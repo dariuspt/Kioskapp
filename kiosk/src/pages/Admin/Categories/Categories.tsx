@@ -1,38 +1,38 @@
 import { Paper, Grid } from "@mui/material";
-import { useDatagridData } from "./useDatagridData";
+import { useDatagridData } from "./useDataGrigData";
 import { DataGrid } from "@mui/x-data-grid";
 import { datagridStyles } from "@/styles/styles";
 import { administrationToolbar } from "@/common/utils/dataGrid/components/AdministrationToolbar";
 import { FormProvider, useForm } from "react-hook-form";
-import { ProductsInterface as Produse } from "@/resources/adminProduct";
 import { DevTool } from "@hookform/devtools";
 import { useSnackbar } from "notistack";
 import Sidebar from "../Dashboard/SideBar";
+import { CategoryIn } from "@/resources/adminCategories";
 
-const Products = () => {
+const Categories = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const methods = useForm<Produse>({ defaultValues: {}, mode: "all" });
+  const methods = useForm<CategoryIn>({ defaultValues: {}, mode: "all" });
   const { data, createRow } = useDatagridData({
     onFetchError: () => {
       enqueueSnackbar("Eroare intrari", { variant: "error" });
     },
     onCreateError: () => {
-      enqueueSnackbar("Eroare Creare Produs", { variant: "error" });
+      enqueueSnackbar("Eroare Creare Categorie", { variant: "error" });
     },
     onCreateSuccess: () => {
       enqueueSnackbar("Succes", { variant: "success" });
     },
     onUpdateError: () => {
-      enqueueSnackbar("Eroare Update Produs", { variant: "error" });
+      enqueueSnackbar("Eroare Update Categorie", { variant: "error" });
     },
     onUpdateSuccess: () => {
-      enqueueSnackbar("Success Update Produs", { variant: "success" });
+      enqueueSnackbar("Success Update Categorie", { variant: "success" });
     },
     onDeleteError: () => {
-      enqueueSnackbar("Eroare Stergere Produs", { variant: "error" });
+      enqueueSnackbar("Eroare Stergere Categorie", { variant: "error" });
     },
     onDeleteSuccess: () => {
-      enqueueSnackbar("Success Stergere Produs", { variant: "success" });
+      enqueueSnackbar("Success Stergere Categorie", { variant: "success" });
     },
     formMethods: methods,
   });
@@ -73,4 +73,4 @@ const Products = () => {
     </Grid>
   );
 };
-export default Products;
+export default Categories;

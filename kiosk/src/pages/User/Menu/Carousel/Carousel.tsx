@@ -5,6 +5,8 @@ import "react-multi-carousel/lib/styles.css";
 import { useNavigate } from "react-router-dom";
 import { slugify } from "@/common/utils/urlCleaner";
 import { useProducts } from "@/resources/userProduct";
+import Loader from "@/components/loader/Loader";
+import { useCart } from "../../Cart/CartContex";
 
 const responsive = {
   desktop: {
@@ -24,9 +26,11 @@ const responsive = {
   },
 };
 
-const CarouselProducts = ({ addToCart }) => {
+const CarouselProducts = () => {
   const { products, isLoading, isError } = useProducts();
   const navigate = useNavigate();
+
+  const { addToCart } = useCart();
 
   const handleClick = (id) => {
     const slug = slugify(id);
@@ -34,7 +38,7 @@ const CarouselProducts = ({ addToCart }) => {
   };
 
   if (isLoading) {
-    return <p>Loading products...</p>; // Display loading state while fetching
+    return <Loader />;
   }
 
   if (isError) {
@@ -79,7 +83,7 @@ const CarouselProducts = ({ addToCart }) => {
               <ProductCard
                 product={product}
                 onClick={() => handleClick(product.name)}
-                addToCart={() => addToCart(product)}
+                addToCart={addToCart} // Pass the function as is
               />
             </Grid>
           ))}

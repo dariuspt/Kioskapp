@@ -6,25 +6,21 @@ import {
   GridRowId,
   useGridApiRef,
 } from "@mui/x-data-grid";
-import { useProducts, ProductsInterface } from "@/resources/adminProduct"; // Import custom hook and service
-import { useColumns } from "./useColumns";
+import { useColumns } from "./useColumn";
 import { RowsStatusInterface } from "@/common/interfaces/rowsStatus";
 import { trimObjectStrings } from "@/common/utils/objectUtils";
 import { SimpleFunction } from "@/common/interfaces/GeneralFunctionTypes";
+import { CategoryIn, useCategories } from "@/resources/adminCategories";
 
-export const EMPTY_PRODUCT_ROW_ID: number = 0;
+export const EMPTY_CATEGORY_ROW_ID: number = 0;
 const FIELD_TO_FOCUS = "name";
-export const EMPTY_PRODUCT_ROW: ProductsInterface = Object.freeze({
-  id: EMPTY_PRODUCT_ROW_ID,
+export const EMPTY_CATEGORY_ROW: CategoryIn = Object.freeze({
+  id: EMPTY_CATEGORY_ROW_ID,
   name: "",
-  price: 0,
-  producer: "",
   description: "",
-  stock: 0,
-  category: "",
-  subcategory: "",
+  subcategory: [],
   image_url: "",
-  is_top_product: false,
+  is_top_category: false,
 });
 
 interface DatagridDataInterface {
@@ -43,13 +39,13 @@ export const useDatagridData = ({
   formMethods,
 }): DatagridDataInterface => {
   const {
-    products: rows,
+    categories: rows,
     loading,
     create,
     deleteOne,
     update,
     mutate,
-  } = useProducts({ onError: onFetchError });
+  } = useCategories({ onError: onFetchError });
   const { getValues, unregister, reset } = formMethods;
   const apiRef = useGridApiRef();
   const [rowModesModel, setRowModesModel] = useState<GridRowModesModel>({});
@@ -61,7 +57,7 @@ export const useDatagridData = ({
       return rows;
     }
     const updatedRows = [...rows];
-    updatedRows.splice(newRowIndex, 0, EMPTY_PRODUCT_ROW);
+    updatedRows.splice(newRowIndex, 0, EMPTY_CATEGORY_ROW);
     return updatedRows;
   }, [rows, createInProgress, newRowIndex]);
 
@@ -81,7 +77,7 @@ export const useDatagridData = ({
       [id]: { mode: GridRowModes.View },
     });
     const lineData = getValues(id.toString());
-    if (id === EMPTY_PRODUCT_ROW_ID) {
+    if (id === EMPTY_CATEGORY_ROW_ID) {
       handleRequestCreate(lineData, id);
     } else {
       handleRequestUpdate(lineData, id);
@@ -97,12 +93,12 @@ export const useDatagridData = ({
         ignoreModifications: true,
       },
     });
-    if (id === EMPTY_PRODUCT_ROW_ID) {
+    if (id === EMPTY_CATEGORY_ROW_ID) {
       setCreateInProgress(false);
     }
   }
 
-  function handleEdit(row: ProductsInterface) {
+  function handleEdit(row: CategoryIn) {
     const { id, ...rowData } = row;
     reset((formValues) => ({
       ...formValues,
@@ -126,7 +122,7 @@ export const useDatagridData = ({
 
   const handleCreateEmptyRow = useCallback(() => {
     const { page, pageSize } = apiRef.current.state.pagination.paginationModel;
-    const { id, ...newRow } = EMPTY_PRODUCT_ROW;
+    const { id, ...newRow } = EMPTY_CATEGORY_ROW;
     setCreateInProgress(true);
     setRowModesModel((oldModel) => ({
       ...oldModel,
@@ -152,12 +148,10 @@ export const useDatagridData = ({
     }));
   }
 
-  async function handleRequestCreate(data: ProductsInterface, id: number) {
+  async function handleRequestCreate(data: CategoryIn, id: number) {
     // Ensure price and stock are numbers
     const apiData = {
       ...trimObjectStrings(data),
-      price: Number(data.price),
-      stock: Number(data.stock),
       image: data.image,
     };
 
@@ -178,7 +172,7 @@ export const useDatagridData = ({
     }
   }
 
-  async function handleRequestUpdate(data: ProductsInterface, id: number) {
+  async function handleRequestUpdate(data: CategoryIn, id: number) {
     const apiData = {
       ...trimObjectStrings(data),
       image: data.image, // Include the image file

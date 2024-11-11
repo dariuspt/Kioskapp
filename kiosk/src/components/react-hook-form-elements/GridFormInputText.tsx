@@ -15,7 +15,7 @@ import { useTranslation } from "react-i18next";
 import { STRING_VALIDATION_RULE } from "@/constants/rules"; 
 import { datagridStyles } from "@/styles/styles"; 
 
-export type Props<T> = {
+export type Props<T extends FieldValues> = {
   name: keyof T;
   control: Control<T>;
   variant?: TextFieldVariants;

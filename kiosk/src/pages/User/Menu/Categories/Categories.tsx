@@ -4,37 +4,20 @@ import UserSidebar from "../sideBar/UserSidebar";
 import GridProducts from "@/components/GridProducts/GridProducts";
 import SearchBar from "../SearchBar/SearchBar";
 import Cart from "../../Cart/Cart";
-import { useState } from "react";
-import { Product } from "../Product";
+import { useCart } from "../../Cart/CartContex";
+import { useProducts } from "@/resources/userProduct";
 
 const Categories = () => {
   const { id } = useParams();
+  console.log(id, "Category");
 
-  const [cartItems, setCartItems] = useState<Product[]>([]);
-
-  const addToCart = (product: Product) => {
-    const existingProduct = cartItems.find((item) => item.id === product.id);
-
-    if (existingProduct) {
-      // If the product is already in the cart, update the quantity
-      setCartItems(
-        cartItems.map((item) =>
-          item.id === product.id
-            ? { ...item, quantity: (item.quantity || 0) + 1 } // Increment quantity if it exists
-            : item
-        )
-      );
-    } else {
-      // If the product is not in the cart, add it with quantity 1
-      setCartItems([...cartItems, { ...product, quantity: 1 }]);
-    }
-  };
+  const { addToCart } = useCart();
 
   return (
     <Container maxWidth="xl" sx={{ display: "flex" }}>
       <Grid container spacing={3}>
         {/* Sidebar */}
-        <Grid item xs={1} >
+        <Grid item xs={1}>
           <UserSidebar />
         </Grid>
 
@@ -45,13 +28,21 @@ const Categories = () => {
           sx={{
             display: "flex",
             flexDirection: "column",
-            marginRight: 12, 
+            marginRight: 12,
           }}
         >
           <Box sx={{ width: "100%" }}>
-            <SearchBar addToCart={addToCart} />
+            <SearchBar />
           </Box>
-          <Typography variant="h5" sx={{ fontWeight: "bolder", marginTop: 4, marginBottom: 4, marginLeft: 9, }}>
+          <Typography
+            variant="h5"
+            sx={{
+              fontWeight: "bolder",
+              marginTop: 4,
+              marginBottom: 4,
+              marginLeft: 9,
+            }}
+          >
             {id}
             <span> (260)</span>
           </Typography>
@@ -61,7 +52,7 @@ const Categories = () => {
               width: "100%",
             }}
           >
-            <GridProducts addToCart={addToCart} />
+            <GridProducts addToCart={addToCart} categoryId={id} />
           </Box>
         </Grid>
 
@@ -76,7 +67,7 @@ const Categories = () => {
             justifyContent: "flex-start",
           }}
         >
-          <Cart cartItems={cartItems} setCartItems={setCartItems} />
+          <Cart />
         </Grid>
       </Grid>
     </Container>

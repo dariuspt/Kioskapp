@@ -23,6 +23,7 @@ export const Api = (
         // For JSON requests, set headers as application/json
         request.headers['Accept'] = 'application/json';
         request.headers['Content-Type'] = 'multipart/form-data';
+        request.headers['Content-Type'] = 'application/json';
       }
 
       // Remove 'Access-Control-Allow-Origin' as it's a response header
