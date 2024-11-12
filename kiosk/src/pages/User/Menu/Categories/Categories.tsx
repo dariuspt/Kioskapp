@@ -5,7 +5,6 @@ import GridProducts from "@/components/GridProducts/GridProducts";
 import SearchBar from "../SearchBar/SearchBar";
 import Cart from "../../Cart/Cart";
 import { useCart } from "../../Cart/CartContex";
-import { useProducts } from "@/resources/userProduct";
 
 const Categories = () => {
   const { id } = useParams();

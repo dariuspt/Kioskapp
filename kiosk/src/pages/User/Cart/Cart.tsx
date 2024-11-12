@@ -32,12 +32,16 @@ const Cart = () => {
       // Loop through cartItems and create an order for each item
       for (const item of cartItems) {
         const orderData = {
-          product_id: item.id,
-          quantity: item.quantity,
+          products: [
+            {
+              product_id: item.id,
+              quantity: item.quantity,
+            },
+          ],
         };
         await OrdersService.createOrder(orderData);
       }
-      
+
       // Clear the cart, close modal, and show sale confirmation
       clearCart(); // Clear the cart
       setModalOpen(false); // Close the cart summary modal
@@ -66,25 +70,25 @@ const Cart = () => {
               borderRadius: 2,
             }}
           >
-            <Box sx={{ display: 'flex', alignItems: 'center', marginLeft: 2 }}>
+            <Box sx={{ display: "flex", alignItems: "center", marginLeft: 2 }}>
               <CardMedia
                 component="img"
-                sx={{ width: 100, height: 150, objectFit: 'contain' }}
+                sx={{ width: 100, height: 150, objectFit: "contain" }}
                 image={item.image_url}
                 alt={item.title}
               />
               <CardContent sx={{ flex: 1 }}>
-                <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+                <Typography variant="h6" sx={{ fontWeight: "bold" }}>
                   {item.name}
                 </Typography>
                 <Typography
                   variant="body1"
-                  sx={{ color: 'green', fontSize: 20 }}
+                  sx={{ color: "green", fontSize: 20 }}
                 >
                   {item.price} Lei
                 </Typography>
                 <Box
-                  sx={{ display: 'flex', alignItems: 'center', marginTop: 1 }}
+                  sx={{ display: "flex", alignItems: "center", marginTop: 1 }}
                 >
                   {/* Decrease Quantity Button */}
                   <IconButton
@@ -98,8 +102,8 @@ const Cart = () => {
                     sx={{
                       marginLeft: 1,
                       marginRight: 1,
-                      fontSize: '1.1rem',
-                      fontWeight: 'bold',
+                      fontSize: "1.1rem",
+                      fontWeight: "bold",
                     }}
                   >
                     {item.quantity}
@@ -124,17 +128,17 @@ const Cart = () => {
       <Button
         variant="contained"
         sx={{
-          backgroundColor: 'green',
-          color: 'white',
-          borderRadius: '20px',
-          width: '100%',
+          backgroundColor: "green",
+          color: "white",
+          borderRadius: "20px",
+          width: "100%",
           marginTop: 2,
-          '&:hover': {
-            backgroundColor: 'darkgreen',
+          "&:hover": {
+            backgroundColor: "darkgreen",
           },
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
         }}
         onClick={() => setModalOpen(true)} // Open the cart summary modal
         disabled={cartItems.length === 0} // Disable if cart is empty
@@ -161,19 +165,23 @@ const Cart = () => {
       >
         <Box
           sx={{
-            position: 'absolute',
-            top: '50%',
-            left: '50%',
-            transform: 'translate(-50%, -50%)',
+            position: "absolute",
+            top: "50%",
+            left: "50%",
+            transform: "translate(-50%, -50%)",
             width: 300,
-            bgcolor: 'background.paper',
+            bgcolor: "background.paper",
             boxShadow: 24,
             p: 4,
             borderRadius: 2,
-            textAlign: 'center',
+            textAlign: "center",
           }}
         >
-          <Typography id="sale-completed-title" variant="h6" sx={{ marginBottom: 2 }}>
+          <Typography
+            id="sale-completed-title"
+            variant="h6"
+            sx={{ marginBottom: 2 }}
+          >
             Vânzare efectuată
           </Typography>
           <Button
@@ -187,6 +195,5 @@ const Cart = () => {
     </Box>
   );
 };
-
 
 export default Cart;

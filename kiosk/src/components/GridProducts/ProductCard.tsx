@@ -85,6 +85,7 @@ export const ProductCard = ({ product, onClick, addToCart }: Props) => {
             e.stopPropagation(); // Prevent triggering the card's onClick
             addToCart(product); // Pass the product to add to cart
           }}
+          disabled={product.stock <= 0} // Disable button if stock is less than or equal to 0
         >
           Adaugă în coș
         </Button>

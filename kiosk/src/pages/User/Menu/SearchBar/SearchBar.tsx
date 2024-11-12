@@ -97,7 +97,7 @@ const SearchBar = () => {
                       objectFit: "contain",
                       marginRight: 2,
                     }}
-                    image={option.image_url}
+                    image={option.image_url || "https://via.placeholder.com/300"}
                     alt={option.name}
                   />
                   <CardContent sx={{ flex: 1 }}>
@@ -113,6 +113,7 @@ const SearchBar = () => {
                   <Button
                     variant="contained"
                     color="success"
+                    disabled={option.stock <= 0}
                     onClick={(event) => {
                       event.stopPropagation();
                       addToCart(addToCart);
