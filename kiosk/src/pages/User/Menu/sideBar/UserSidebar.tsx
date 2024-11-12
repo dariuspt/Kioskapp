@@ -22,7 +22,7 @@ const UserSidebar = () => {
   };
 
   const handleBackClick = () => {
-    navigate(-1);
+    navigate('/user');
   };
 
   if (loading) {

@@ -15,6 +15,7 @@ import { useProducts } from "@/resources/userProduct";
 import UserSidebar from "../Menu/sideBar/UserSidebar";
 import Cart from "../Cart/Cart";
 import { useCart } from "../Cart/CartContex";
+import { slugify } from "@/common/utils/urlCleaner";
 
 const Product = () => {
   const { id } = useParams();
@@ -38,8 +39,9 @@ const Product = () => {
     return <Typography>No products available.</Typography>;
   }
   const product = products.find(
-    (p) => p.name.toLowerCase() === id.toLowerCase()
+    (p) => slugify(p.name) === slugify(id)
   );
+  
   console.log("Product:", product?.name);
   console.log("ID from params:", id);
 
@@ -63,7 +65,7 @@ const Product = () => {
                 {/* Left Side of Middle - Product Image */}
                 <Grid item xs={12} md={5}>
                   <img
-                    src={product.image_url || "https://via.placeholder.com/300"}
+                    src={product.image_url ||  "https://via.placeholder.com/300"}
                     alt={product.name}
                     style={{ width: "100%", height: "auto" }}
                   />
@@ -75,7 +77,7 @@ const Product = () => {
                   <Box sx={{ mb: 3 }}>
                     {/* Product Category */}
                     <Typography variant="subtitle1" color="textSecondary">
-                      {product.category}
+                      {product.category_name}
                     </Typography>
 
                     {/* Product Title */}
@@ -190,6 +192,7 @@ const Product = () => {
                         <Button
                           variant="contained"
                           size="large"
+                          disabled={product.stock <= 0}
                           sx={{
                             backgroundColor: "#28a745",
                             color: "white",

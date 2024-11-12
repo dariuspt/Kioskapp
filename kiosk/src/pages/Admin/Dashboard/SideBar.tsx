@@ -34,8 +34,7 @@ const Sidebar = ({ children,  back }: SidebarProps) => {
     const routes: { [key: string]: string } = {
       products: "/products",
       categories: "/categories",
-      subCategory: "/subCategory",
-      // orders: "/orders",
+      history: "/history",
     };
 
     if (routes[id]) {
@@ -106,6 +105,13 @@ const Sidebar = ({ children,  back }: SidebarProps) => {
               onClick={() => handleClick("categories")}
             >
               <Typography variant="body1">Categories</Typography>
+            </MenuItem>
+            <MenuItem
+              id="history"
+              sx={{ marginTop: 2, marginBottom: 2 }}
+              onClick={() => handleClick("history")}
+            >
+              <Typography variant="body1">History</Typography>
             </MenuItem>
           </>
         ) : (

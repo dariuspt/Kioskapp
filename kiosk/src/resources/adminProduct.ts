@@ -1,11 +1,12 @@
 import { Api } from "@/common/utils/httpsinterceptor";
 import useSWR, { SWRConfiguration } from "swr";
-import { SubCategoriesInterface } from "./subCategory";
 
 const service = import.meta.env.VITE_ENV_SERVICE;
 const route = "/products";
 
 export interface ProductsInterface {
+  quantity: any;
+  product: any;
   id: number;
   name: string;
   producer: string;
@@ -19,10 +20,9 @@ export interface ProductsInterface {
 }
 
 export interface ProductsInterfaceOut
-  extends Omit<ProductsInterface, "image" | "category" | "subcategory"> {
+  extends Omit<ProductsInterface, "image" | "category"> {
   image_url?: string | null; // Received from the backend (e.g., fetching products)
   category_name: string;
-  subcategory_name: string;
 }
 
 interface Product {
