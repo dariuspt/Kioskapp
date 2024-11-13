@@ -1,14 +1,16 @@
 import { getDatagridActions } from "@/common/utils/dataGrid/actions/getDatagridAction";
 import { renderDataGridCellExpand } from "@/common/utils/dataGrid/helpers";
-import { GridCellExpand } from "@/components/gridCellExpand.tsx/GridCellExpand";
 import FormInputFile from "@/components/react-hook-form-elements/FormInputFile";
 import FormSelect from "@/components/react-hook-form-elements/FormSelect";
-import { BasicRenderOption, CheckboxOption } from "@/components/react-hook-form-elements/formSelect/RenderOption";
+import {
+  BasicRenderOption,
+  CheckboxOption,
+} from "@/components/react-hook-form-elements/formSelect/RenderOption";
 import GridCheckboxInput from "@/components/react-hook-form-elements/GridCheckboxInput";
 import GridFormInputText from "@/components/react-hook-form-elements/GridFormInputText";
 import { useCategories } from "@/resources/adminCategories";
 import { Typography } from "@mui/material";
-import { GridColDef, GridRowModes} from "@mui/x-data-grid";
+import { GridColDef, GridRowModes } from "@mui/x-data-grid";
 import { enqueueSnackbar } from "notistack";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
@@ -45,13 +47,17 @@ const renderTextfieldCell = (params) => {
 };
 
 export const GridFileInput = ({ field, id }) => {
-  const { control, trigger } = useFormContext();
+  const { control, trigger, watch } = useFormContext();
   const name = `${id}.${field}`;
 
+  const value = watch(name);
+
   useEffect(() => {
-    // Optionally trigger validation when the component mounts
-    trigger(name);
-  }, [name, trigger]);
+    // Optionally only trigger validation if the value changes to an empty string or invalid state.
+    if (value === "") {
+      trigger(name); // Trigger validation only if the field is empty
+    }
+  }, [value, trigger, name]);
 
   return <FormInputFile name={name} control={control} accept="image/*" />;
 };
@@ -172,15 +178,6 @@ export const useColumns = ({
       renderEditCell: renderDropdownCell,
       renderCell: renderDataGridCellExpand,
     },
-    // {
-    //   field: "subcategory",
-    //   headerName: "Subcategory",
-    //   flex: 1,
-    //   editable: true,
-    //   minWidth: 100,
-    //   renderEditCell: renderTextfieldCell,
-    //   renderCell: renderDataGridCellExpand,
-    // },
     {
       field: "image",
       headerName: "Image",

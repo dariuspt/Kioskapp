@@ -1,20 +1,12 @@
 import { getDatagridActions } from "@/common/utils/dataGrid/actions/getDatagridAction";
 import { renderDataGridCellExpand } from "@/common/utils/dataGrid/helpers";
 import FormInputFile from "@/components/react-hook-form-elements/FormInputFile";
-import FormSelect from "@/components/react-hook-form-elements/FormSelect";
-import {
-  BasicRenderOption,
-  CheckboxOption,
-} from "@/components/react-hook-form-elements/formSelect/RenderOption";
 import GridCheckboxInput from "@/components/react-hook-form-elements/GridCheckboxInput";
 import GridFormInputText from "@/components/react-hook-form-elements/GridFormInputText";
 import { Box, Typography } from "@mui/material";
 import { GridColDef, GridRowModes } from "@mui/x-data-grid";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
-import { CategoryService } from "@/resources/adminCategories";
-import { fetchCastedCategories } from "../Products/useColumns";
-import { useSubcategories } from "./utils";
 
 const GridTextField = ({ field, id }) => {
   const { control, trigger } = useFormContext();
@@ -56,55 +48,6 @@ const renderCheckboxCell = (params) => {
   const { field, id } = params;
 
   return <GridCheckbox field={field} id={id} />;
-};
-
-const GridDropdown = ({ field, id, multiple, categoryId }) => {
-  const { control } = useFormContext();
-  const name = `${id}.${field}`;
-  const { subcategories, loading } = useSubcategories(categoryId);
-  return (
-    <FormSelect
-      options={subcategories}
-      label=""
-      name={name}
-      multiple={multiple}
-      key={name}
-      control={control}
-      disableCloseOnSelect={multiple}
-      getOptionLabel={(option) => option.name}
-      isOptionEqualToValue={(option, value) => option.id === value.id}
-      renderOption={(props, option, { selected }) =>
-        multiple ? (
-          <CheckboxOption
-            props={props}
-            option={option.name}
-            selected={selected}
-          />
-        ) : (
-          <BasicRenderOption
-            props={props}
-            value={option?.name}
-            key={option.id}
-          />
-        )
-      }
-    />
-  );
-};
-
-const renderDropdownCell = (params) => {
-  const { field, id } = params;
-  const categoryId = params.row.id;
-  console.log('categoryId')
-
-  return (
-    <GridDropdown
-      field={field}
-      id={id}
-      multiple={false}
-      categoryId={categoryId}
-    />
-  );
 };
 
 export const useColumns = ({
@@ -180,15 +123,6 @@ export const useColumns = ({
           </Box>
         );
       },
-    },
-    {
-      field: "subcategory",
-      headerName: "Subcategory",
-      flex: 1,
-      editable: true,
-      minWidth: 100,
-      renderEditCell: renderDropdownCell,
-      renderCell: renderDataGridCellExpand,
     },
     {
       field: "is_top_category",

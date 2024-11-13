@@ -115,7 +115,7 @@ export const useDatagridData = ({
     updateRowStatus({ id, deleteDisabled: true });
     try {
       await deleteOne(id);
-      mutate((current) => current.filter((el) => el.id !== id));
+      mutate((current) => current?.filter((el) => el.id !== id));
       onDeleteSuccess();
     } catch {
       onDeleteError();
@@ -189,7 +189,7 @@ export const useDatagridData = ({
       const response = await update(id, apiData);
       if (response) {
         mutate((current) => {
-          return current.map((element) => {
+          return current?.map((element) => {
             if (element.id === id) {
               return response;
             }

@@ -5,8 +5,8 @@ const service = import.meta.env.VITE_ENV_SERVICE;
 const route = "/products";
 
 export interface ProductsInterface {
-  quantity: any;
-  product: any;
+  quantity?: any;
+  product?: any;
   id: number;
   name: string;
   producer: string;
@@ -22,7 +22,7 @@ export interface ProductsInterface {
 export interface ProductsInterfaceOut
   extends Omit<ProductsInterface, "image" | "category"> {
   image_url?: string | null; // Received from the backend (e.g., fetching products)
-  category_name: string;
+  category_name?: string;
 }
 
 interface Product {
@@ -77,7 +77,7 @@ export const ProductsService: Product = {
       formData.append("image", data.image); // Append the image file
     }
 
-    return Api(service).put(`${route}/${id}`, formData, {
+    return Api(service).patch(`${route}/${id}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

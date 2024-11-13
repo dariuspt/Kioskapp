@@ -33,7 +33,10 @@ const getProperMaxLength = (name: string) => {
 export default function GridFormInputText<T extends FieldValues>({
   name,
   control,
-  rules = { ...STRING_VALIDATION_RULE, maxLength: getProperMaxLength(name) },
+  rules = {
+    ...STRING_VALIDATION_RULE,
+    maxLength: getProperMaxLength(name) as number | undefined,
+  },
   variant = "standard",
   gridWidth = "100%",
   readOnly,

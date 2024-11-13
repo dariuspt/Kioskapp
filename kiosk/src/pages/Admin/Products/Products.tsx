@@ -4,14 +4,17 @@ import { DataGrid } from "@mui/x-data-grid";
 import { datagridStyles } from "@/styles/styles";
 import { administrationToolbar } from "@/common/utils/dataGrid/components/AdministrationToolbar";
 import { FormProvider, useForm } from "react-hook-form";
-import { ProductsInterface as Produse } from "@/resources/adminProduct";
 import { DevTool } from "@hookform/devtools";
 import { useSnackbar } from "notistack";
 import Sidebar from "../Dashboard/SideBar";
+import { RowsStatusInterface } from "@/common/interfaces/rowsStatus";
 
 const Products = () => {
   const { enqueueSnackbar } = useSnackbar();
-  const methods = useForm<Produse>({ defaultValues: {}, mode: "all" });
+  const methods = useForm<RowsStatusInterface>({
+    defaultValues: {},
+    mode: "all",
+  });
   const { data, createRow } = useDatagridData({
     onFetchError: () => {
       enqueueSnackbar("Eroare intrari", { variant: "error" });
@@ -66,8 +69,8 @@ const Products = () => {
               }}
               disableRowSelectionOnClick
             />
-            <DevTool control={methods.control} />
           </FormProvider>
+          <DevTool control={methods.control} />
         </Paper>
       </Grid>
     </Grid>
