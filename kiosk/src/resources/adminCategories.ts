@@ -61,7 +61,7 @@ export const CategoryService: Category = {
       formData.append("image", data.image); // Append the image file
     }
 
-    return Api(service).put(`${route}/${id}`, formData, {
+    return Api(service).patch(`${route}/${id}`, formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },

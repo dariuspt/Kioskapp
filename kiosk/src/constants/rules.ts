@@ -5,7 +5,11 @@ export const DEFAULT_VALIDATION_RULE: RegisterOptions = {
 };
 
 export const STRING_VALIDATION_RULE: RegisterOptions = {
-  validate: (value: string) => Boolean(value.trim()),
+  validate: (value: string) => {
+    if (typeof value !== 'string') return 'Invalid value type';
+    if (value.trim().length === 0) return 'Field cannot be empty';
+    return true; // Return true if the value passes all checks
+  },
 };
 
 export const NUMBER_VALIDATION_RULE: RegisterOptions = {
