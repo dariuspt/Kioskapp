@@ -1,6 +1,6 @@
 import { Card, CardContent, Typography, CardMedia } from "@mui/material";
 
-const ProductCard = ({ product }) => {
+const ProductCard = ({ product, quantity }) => {
   return (
     <Card
       sx={{
@@ -39,13 +39,15 @@ const ProductCard = ({ product }) => {
         >
           {product.name}
         </Typography>
-        <Typography
-          variant="body2"
-          color="text.secondary"
-          sx={{ fontWeight: "bold" }}
-        >
-          {product.quantity} quantity
-        </Typography>
+        {quantity !== undefined && (
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={{ fontWeight: "bold" }}
+          >
+            {quantity} {quantity > 1 ? 'cantitatii' : 'cantitate'}
+          </Typography>
+        )}
       </CardContent>
     </Card>
   );

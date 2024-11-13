@@ -27,7 +27,7 @@ const ConfirmDeletePrompt = ({ onConfirm, onCancel, open }: Props) => {
       }}
     >
       <DialogContent>
-        <Typography fontSize="20px">{t("deleteEntryMessage")}</Typography>
+        <Typography fontSize="20px">{t("Esti sigur de stergere?")}</Typography>
       </DialogContent>
       <DialogActions>
         <Button onClick={onCancel}>{t("cancel")}</Button>

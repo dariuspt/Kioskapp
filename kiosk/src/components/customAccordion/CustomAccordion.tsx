@@ -36,7 +36,7 @@ const CustomAccordion = ({ order }) => {
         <Grid container spacing={3}>
           {order.products.map((product, index) => (
             <Grid item xs={12} sm={6} md={4} key={index}>
-              <ProductCard product={product.product} />
+              <ProductCard product={product.product} quantity={product.quantity} />
             </Grid>
           ))}
         </Grid>

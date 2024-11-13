@@ -1,6 +1,5 @@
 export const slugify = (text) => {
     return text
-      .toString()
       .toLowerCase() // Convert text to lowercase
       .replace(/\s+/g, '-') // Replace spaces with -
       .replace(/[^\w\-]+/g, '') // Remove all non-word chars
