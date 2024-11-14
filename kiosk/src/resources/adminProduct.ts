@@ -41,45 +41,53 @@ export const ProductsService: Product = {
   getProducts: () => Api(service).get(route),
   createProducts: (data) => {
     const formData = new FormData();
-    for (const key in data) {
-      if (data[key] != null && key !== "image_url") {
-        if (key === "category_name") {
-          // If category_name is an object, extract the name
-          const categoryNameValue =
-            typeof data[key] === "object" && data[key] !== null
-              ? data[key].name // Extract the category name
-              : data[key].toString();
 
-          formData.append("category", categoryNameValue);
+    // Loop through all the keys in the data object
+    for (const key in data) {
+      if (data[key] != null) {
+        // Handle different fields appropriately
+        if (key === "image" && data[key] instanceof File) {
+          formData.append("image", data[key]); // Append the image file
+        } else if (key !== "image") {
+          // Append other fields as strings, excluding the image file itself
+          formData.append(key, data[key].toString());
+        }
+      }
+    }
+
+    // Make the POST request with FormData
+    return Api(service).post(route, formData);
+  },
+  update: (id, data) => {
+    const formData = new FormData();
+
+    // Append all non-file fields to FormData
+    for (const key in data) {
+      if (data[key] != null && key !== "image") {
+        // Handle category specifically if it's an object
+        if (
+          key === "category_name" &&
+          typeof data[key] === "object" &&
+          data[key] !== null
+        ) {
+          formData.append("category", data[key].name); // Assuming backend expects category name
         } else {
           formData.append(key, data[key].toString());
         }
       }
     }
+
+    // Append the image file if it exists
     if (data.image) {
       formData.append("image", data.image); // Append the image file
     }
 
-    return Api(service).post(route, formData, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-  },
-  update: (id, data) => {
-    const formData = new FormData();
-    for (const key in data) {
-      if (data[key] != null && key !== "image") {
-        formData.append(key, data[key].toString());
-      }
-    }
-    if (data.image) {
-      formData.append("image", data.image); // Append the image file
-    }
-
+    // Make the patch request with FormData
     return Api(service).patch(`${route}/${id}`, formData, {
       headers: {
-        "Content-Type": "multipart/form-data",
+        // Allow FormData to automatically handle content type including boundaries
+        // Removing manual setting of "Content-Type" is recommended
+        // "Content-Type": "multipart/form-data", // Do NOT set manually
       },
     });
   },

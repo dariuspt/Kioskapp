@@ -14,15 +14,16 @@ import { useState } from "react";
 import { useProducts } from "@/resources/userProduct";
 import UserSidebar from "../Menu/sideBar/UserSidebar";
 import Cart from "../Cart/Cart";
-import { useCart } from "../Cart/CartContex";
+// import { useCart } from "../Cart/CartContex";
 import { slugify } from "@/common/utils/urlCleaner";
+import { useDispatch } from "react-redux";
+import { addToCart } from "@/redux/cart/cartSlices";
 
 const Product = () => {
   const { id } = useParams();
   const { products, isError, isLoading } = useProducts();
   const [quantity, setQuantity] = useState(1);
-  const { addToCart } = useCart();
-
+  const dispatch = useDispatch();
   const handleQuantityChange = (event) => {
     setQuantity(Number(event.target.value));
   };
@@ -38,10 +39,8 @@ const Product = () => {
   if (!products) {
     return <Typography>No products available.</Typography>;
   }
-  const product = products.find(
-    (p) => slugify(p.name) === slugify(id)
-  );
-  
+  const product = products.find((p) => slugify(p.name) === slugify(id));
+
   console.log("Product:", product?.name);
   console.log("ID from params:", id);
 
@@ -65,7 +64,7 @@ const Product = () => {
                 {/* Left Side of Middle - Product Image */}
                 <Grid item xs={12} md={5}>
                   <img
-                    src={product.image_url ||  "https://via.placeholder.com/300"}
+                    src={product.image_url || "https://via.placeholder.com/300"}
                     alt={product.name}
                     style={{ width: "100%", height: "auto" }}
                   />
@@ -200,7 +199,7 @@ const Product = () => {
                             flexGrow: 1,
                             fontWeight: "bold",
                           }}
-                          onClick={() => addToCart(product)}
+                          onClick={() =>dispatch(addToCart(product))}
                         >
                           Add to Cart
                         </Button>

@@ -29,7 +29,7 @@ export const fetchCastedCategories = () => {
   });
 };
 
-const GridTextField = ({ field, id }) => {
+const GridTextField = ({ field, id}) => {
   const { control, trigger } = useFormContext();
   const name = `${id}.${field}`;
 
@@ -47,17 +47,14 @@ const renderTextfieldCell = (params) => {
 };
 
 export const GridFileInput = ({ field, id }) => {
-  const { control, trigger, watch } = useFormContext();
+  const { control, trigger} = useFormContext();
   const name = `${id}.${field}`;
 
-  const value = watch(name);
 
   useEffect(() => {
-    // Optionally only trigger validation if the value changes to an empty string or invalid state.
-    if (value === "") {
-      trigger(name); // Trigger validation only if the field is empty
-    }
-  }, [value, trigger, name]);
+    trigger();
+  }, []);
+
 
   return <FormInputFile name={name} control={control} accept="image/*" />;
 };
@@ -157,6 +154,7 @@ export const useColumns = ({
       flex: 1,
       minWidth: 120,
       editable: true,
+      type: "number",
       renderEditCell: renderTextfieldCell,
       renderCell: renderDataGridCellExpand,
     },
@@ -166,6 +164,7 @@ export const useColumns = ({
       flex: 1,
       minWidth: 120,
       editable: true,
+      type: "number",
       renderEditCell: renderTextfieldCell,
       renderCell: renderDataGridCellExpand,
     },
@@ -183,7 +182,7 @@ export const useColumns = ({
       headerName: "Image",
       flex: 1,
       editable: true,
-      minWidth: 150,
+      minWidth: 200,
       renderEditCell: (params) => {
         const { id, field } = params;
         return <GridFileInput id={id} field={field} />;

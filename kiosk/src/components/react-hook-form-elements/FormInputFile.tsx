@@ -1,5 +1,4 @@
 import { Button, Grid} from "@mui/material";
-import { Box } from "@mui/system";
 import {
   Control,
   Controller,
@@ -8,11 +7,8 @@ import {
   RegisterOptions,
   useForm,
 } from "react-hook-form";
-import UploadFileRoundedIcon from "@mui/icons-material/UploadFileRounded";
 import { useState } from "react";
-import { bytesToMegaBytes } from "@/common/utils/bytesToMegaBytes";
 import { useTranslation } from "react-i18next";
-import { classes } from "./styles";
 
 // This type defines a set of common MIME types using a union type. we can add or remove types as needed, depending on the specific requirements of the application
 type AcceptableFileTypes =
@@ -33,7 +29,6 @@ export type Props<T extends FieldValues> = {
   name: keyof T;
   control: Control<T>;
   required?: boolean;
-  label?: string;
   defaultSelectedFile?: File;
   rules?: RegisterOptions;
   accept?: AcceptableFileTypes;
@@ -43,41 +38,53 @@ export default function FormInputFile<T extends FieldValues>({
   control,
   defaultSelectedFile,
   name,
-  accept = "application/pdf",
+  accept,
 }: Props<T>) {
   const { t } = useTranslation();
+  const { setValue, trigger } = useForm();
   const [selectedFile, setSelectedFile] = useState<File>(
     defaultSelectedFile || null
   );
 
   return (
-    <Controller
-      name={name}
-      control={control}
-      render={({ field }) => (
-        <Grid container alignItems="center" spacing={2} sx={{display: 'flex', justifyContent: 'center', justifyItems: 'center',}}>
-          <Grid item>
-            <Button variant="outlined" component="label">
-              {t("uploadFile")}
-              <input
-                type="file"
-                hidden
-                accept={accept}
-                onChange={(e) => {
-                  const file = e.target.files[0];
-                  field.onChange(file);
-                  setSelectedFile(file);
-                }}
-              />
-            </Button>
+    <>
+      <Controller
+        name={name as Path<T>}
+        control={control as Control<FieldValues>}
+        render={({ field }) => (
+          <Grid
+            container
+            alignItems="center"
+            spacing={2}
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+              justifyItems: "center",
+            }}
+          >
+            <Grid item>
+              <span>{selectedFile ? selectedFile.name : t("")}</span>
+            </Grid>
+            <Grid item>
+              <Button variant="outlined" component="label">
+                {t("browse")}
+                <input
+                  type="file"
+                  hidden
+                  accept={accept}
+                  onChange={(e) => {
+                    const file = e.target.files[0];
+                    field.onChange(file);
+                    setValue("file", file);
+                    setSelectedFile(file);
+                    trigger("file");
+                  }}
+                />
+              </Button>
+            </Grid>
           </Grid>
-          <Grid item>
-            {selectedFile && (
-              <span>{selectedFile.name}</span>
-            )}
-          </Grid>
-        </Grid>
-      )}
-    />
+        )}
+      />
+    </>
   );
 }

@@ -1,5 +1,3 @@
-// httpsinterceptor.ts
-
 import axios, { AxiosInstance, AxiosRequestConfig, AxiosError } from 'axios';
 
 export const Api = (
@@ -15,19 +13,18 @@ export const Api = (
 
   httpInterceptor.interceptors.request.use(
     async (request) => {
-      // If the request data is FormData, let Axios set the headers
+      // Handle FormData differently from JSON
       if (request.data instanceof FormData) {
-        // Remove 'Content-Type' to let Axios set it, including the boundary
+        // Remove 'Content-Type' to let Axios set it properly with boundaries for FormData
         delete request.headers['Content-Type'];
       } else {
-        // For JSON requests, set headers as application/json
+        // Set headers for JSON requests
         request.headers['Accept'] = 'application/json';
-        request.headers['Content-Type'] = 'multipart/form-data';
         request.headers['Content-Type'] = 'application/json';
       }
 
-      // Remove 'Access-Control-Allow-Origin' as it's a response header
-      delete request.headers['Access-Control-Allow-Origin'];
+      // Clean up any unnecessary headers (e.g., removing CORS-related headers)
+      // It is unnecessary to remove 'Access-Control-Allow-Origin', as it's not expected in request headers
 
       return request;
     },

@@ -4,13 +4,18 @@ import UserSidebar from "../sideBar/UserSidebar";
 import GridProducts from "@/components/GridProducts/GridProducts";
 import SearchBar from "../SearchBar/SearchBar";
 import Cart from "../../Cart/Cart";
-import { useCart } from "../../Cart/CartContex";
+import { useDispatch } from "react-redux";
+import { addToCart } from "@/redux/cart/cartSlices";
 
 const Categories = () => {
   const { id } = useParams();
   console.log(id, "Category");
 
-  const { addToCart } = useCart();
+  const dispatch = useDispatch();
+
+  const handleAddToCart = (product) => {
+    dispatch(addToCart(product));
+  };
 
   return (
     <Container maxWidth="xl" sx={{ display: "flex" }}>
@@ -42,8 +47,7 @@ const Categories = () => {
               marginLeft: 9,
             }}
           >
-            {id}
-            <span> (260)</span>
+            {id?.toUpperCase()}
           </Typography>
 
           <Box
@@ -51,7 +55,7 @@ const Categories = () => {
               width: "100%",
             }}
           >
-            <GridProducts addToCart={addToCart} categoryId={id} />
+            <GridProducts addToCart={handleAddToCart} categoryId={id} />
           </Box>
         </Grid>
 

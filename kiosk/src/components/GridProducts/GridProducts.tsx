@@ -49,7 +49,9 @@ const GridProducts = ({ addToCart, categoryId }) => {
         flexGrow: 1,
         display: 'flex',
         justifyContent: 'center',
-        alignItems: 'flex-end',
+        alignItems: "flex-start",
+        overflowY: "auto",
+        height: "800px",
       }}
     >
       {filteredProducts?.map((product, index) => (

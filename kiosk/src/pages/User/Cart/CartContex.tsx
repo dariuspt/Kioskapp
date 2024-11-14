@@ -1,5 +1,5 @@
 import { Products } from "@/resources/userProduct";
-import { createContext, useState, useContext } from "react";
+import { createContext, useState, useContext, useEffect } from "react";
 
 interface Product extends Products {
   [key: string]: any;
@@ -7,7 +7,7 @@ interface Product extends Products {
 
 interface CartItem extends Product {
   quantity: number;
-  [key: string]: any
+  [key: string]: any;
 }
 
 interface CartContextType {
@@ -34,30 +34,36 @@ export const useCart = () => {
   return context;
 };
 
-// Provider component
 export const CartProvider = ({ children }: CartProviderProps) => {
-  const [cartItems, setCartItems] = useState<CartItem[]>([]);
+  // Initialize cartItems state from localStorage if available
+  const [cartItems, setCartItems] = useState<CartItem[]>(() => {
+    if (typeof window !== "undefined") {
+      const storedCartItems = localStorage.getItem("cartItems");
+      return storedCartItems ? JSON.parse(storedCartItems) : [];
+    }
+    return [];
+  });
+
+  // Save cart items to localStorage whenever they change
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      localStorage.setItem("cartItems", JSON.stringify(cartItems));
+    }
+  }, [cartItems]);
 
   const addToCart = (product: Product) => {
     setCartItems((prevItems) => {
       const existingProduct = prevItems.find((item) => item.id === product.id);
-
       if (existingProduct) {
-        // Update the quantity if the product already exists in the cart
         return prevItems.map((item) =>
           item.id === product.id
             ? { ...item, quantity: item.quantity + 1 }
             : item
         );
       } else {
-        // Add the new product to the cart with a quantity of 1
         return [...prevItems, { ...product, quantity: 1 }];
       }
     });
-  };
-
-  const clearCart = () => {
-    setCartItems([]);
   };
 
   const increaseQuantity = (product: Product) => {
@@ -71,12 +77,9 @@ export const CartProvider = ({ children }: CartProviderProps) => {
   const decreaseQuantity = (product: Product) => {
     setCartItems((prevItems) => {
       const targetItem = prevItems.find((item) => item.id === product.id);
-
       if (targetItem && targetItem.quantity === 1) {
-        // Remove the item if the quantity is 1
         return prevItems.filter((item) => item.id !== product.id);
       } else {
-        // Decrease the quantity by 1
         return prevItems.map((item) =>
           item.id === product.id
             ? { ...item, quantity: item.quantity - 1 }
@@ -84,6 +87,10 @@ export const CartProvider = ({ children }: CartProviderProps) => {
         );
       }
     });
+  };
+
+  const clearCart = () => {
+    setCartItems([]);
   };
 
   return (

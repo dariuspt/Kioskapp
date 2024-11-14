@@ -3,18 +3,20 @@ import "./global.css";
 import "./i18n";
 import { mainRoutes } from "./common/routes/mainRoutes";
 import { Grid } from "@mui/material";
-import { CartProvider } from "./pages/User/Cart/CartContex";
+// import { CartProvider } from "./pages/User/Cart/CartContex";
+import { Provider } from 'react-redux';
+import store from "./redux/store/store";
 
 const App = () => {
   return (
-    <Grid style={{ height: "100vh", overflowY: "auto" }}>
-      <CartProvider>
+    <Grid style={{ height: "100vh"}}>
+    <Provider store={store}>
         <Routes>
           {mainRoutes.map((route, index) => (
             <Route key={index} path={route.path} element={route.element} />
           ))}
         </Routes>
-      </CartProvider>
+      </Provider>
     </Grid>
   );
 };
