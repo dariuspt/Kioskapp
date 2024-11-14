@@ -61,7 +61,7 @@ export const useColumns = ({
   const columns = [
     {
       field: "name",
-      headerName: "Name",
+      headerName: "Nume",
       flex: 1,
       minWidth: 120,
       editable: true,
@@ -70,7 +70,7 @@ export const useColumns = ({
     },
     {
       field: "description",
-      headerName: "Description",
+      headerName: "Descriere",
       flex: 1,
       minWidth: 120,
       editable: true,
@@ -79,7 +79,7 @@ export const useColumns = ({
     },
     {
       field: "image",
-      headerName: "Image",
+      headerName: "Imagine",
       flex: 1,
       editable: true,
       minWidth: 150,
@@ -126,7 +126,7 @@ export const useColumns = ({
     },
     {
       field: "is_top_category",
-      headerName: "Top Categorie",
+      headerName: "Categorie de Top",
       flex: 1,
       editable: true,
       type: "boolean",

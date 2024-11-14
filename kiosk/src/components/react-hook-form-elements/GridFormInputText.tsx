@@ -12,7 +12,7 @@ import {
   RegisterOptions,
 } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { STRING_VALIDATION_RULE } from "@/constants/rules"; 
+import { NUMBER_VALIDATION_RULE, STRING_VALIDATION_RULE } from "@/constants/rules"; 
 import { datagridStyles } from "@/styles/styles"; 
 
 export type Props<T extends FieldValues> = {
@@ -33,10 +33,10 @@ const getProperMaxLength = (name: string) => {
 export default function GridFormInputText<T extends FieldValues>({
   name,
   control,
-  rules = {
-    ...STRING_VALIDATION_RULE,
-    maxLength: getProperMaxLength(name) as number | undefined,
-  },
+  // rules = {
+  //   ...STRING_VALIDATION_RULE,
+  //   maxLength: getProperMaxLength(name) as number | undefined,
+  // },
   variant = "standard",
   gridWidth = "100%",
   readOnly,
@@ -49,7 +49,7 @@ export default function GridFormInputText<T extends FieldValues>({
       <Controller
         name={name as Path<T>}
         control={control as Control<FieldValues>}
-        rules={rules}
+        // rules={rules}
         render={({
           field: { onChange, onBlur, value, ref },
           fieldState: { error, isTouched },

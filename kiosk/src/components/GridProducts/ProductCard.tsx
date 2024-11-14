@@ -39,7 +39,7 @@ export const ProductCard = ({ product, onClick, addToCart }: Props) => {
     >
       <CardMedia
         component="img"
-        height="160"
+        height="250"
         image={product.image_url}
         alt={product.title}
         sx={{ objectFit: "contain" }}
@@ -59,7 +59,7 @@ export const ProductCard = ({ product, onClick, addToCart }: Props) => {
         >
           {product.name}
         </Typography>
-        <Typography
+        {/* <Typography
           variant="body2"
           color="textSecondary"
           gutterBottom
@@ -70,9 +70,9 @@ export const ProductCard = ({ product, onClick, addToCart }: Props) => {
             WebkitLineClamp: 3, // Limit the description to 3 lines
           }}
         >
-          {product.description}
-        </Typography>
-        <Divider sx={{ my: 2 }} />
+          {product.description} */}
+        {/* </Typography> */}
+        <Divider sx={{ my: 5 }} />
         <Typography variant="h5" color="error">
           {product.price} Lei
         </Typography>

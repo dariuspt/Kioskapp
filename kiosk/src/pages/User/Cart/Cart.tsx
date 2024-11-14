@@ -11,14 +11,17 @@ import {
 import { RemoveCircleOutline } from "@mui/icons-material";
 import AddCircleOutlineOutlinedIcon from "@mui/icons-material/AddCircleOutlineOutlined";
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
-import { useCart } from "./CartContex"; // Import useCart hook
+// import { useCart } from "./CartContex"; // Import useCart hook
 import { useState } from "react";
 import CartSummaryModal from "@/components/modal/Modal";
 import { OrdersService } from "@/resources/orders";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "@/redux/store/store";
+import { clearCart, decreaseQuantity, increaseQuantity } from "@/redux/cart/cartSlices";
 
 const Cart = () => {
-  const { cartItems, increaseQuantity, decreaseQuantity, clearCart } =
-    useCart(); // Access cart state and functions
+  const cartItems = useSelector((state: RootState) => state.cart.items);
+  const dispatch = useDispatch();
   const [isModalOpen, setModalOpen] = useState(false); // For cart summary modal
   const [isSaleCompletedModalOpen, setSaleCompletedModalOpen] = useState(false); // For sale completed modal
 
@@ -30,20 +33,16 @@ const Cart = () => {
   const handleConfirm = async () => {
     try {
       // Loop through cartItems and create an order for each item
-      for (const item of cartItems) {
-        const orderData = {
-          products: [
-            {
-              product_id: item.id,
-              quantity: item.quantity,
-            },
-          ],
-        };
+      const orderData = {
+        products: cartItems.map((item) => ({
+          product_id: item.id,
+          quantity: item.quantity,
+        })),
+      };
         await OrdersService.createOrder(orderData);
-      }
 
       // Clear the cart, close modal, and show sale confirmation
-      clearCart(); // Clear the cart
+      dispatch(clearCart());  // Clear the cart
       setModalOpen(false); // Close the cart summary modal
       setSaleCompletedModalOpen(true); // Open the sale completed modal
     } catch (error) {
@@ -93,7 +92,7 @@ const Cart = () => {
                   {/* Decrease Quantity Button */}
                   <IconButton
                     size="small"
-                    onClick={() => decreaseQuantity(item)}
+                    onClick={() => dispatch(decreaseQuantity(item.id))}
                   >
                     <RemoveCircleOutline />
                   </IconButton>
@@ -112,7 +111,7 @@ const Cart = () => {
                   {/* Increase Quantity Button */}
                   <IconButton
                     size="small"
-                    onClick={() => increaseQuantity(item)}
+                    onClick={() => dispatch(increaseQuantity(item.id))}
                   >
                     <AddCircleOutlineOutlinedIcon />
                   </IconButton>

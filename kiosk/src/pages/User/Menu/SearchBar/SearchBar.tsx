@@ -17,12 +17,14 @@ import { useNavigate } from "react-router-dom";
 import { slugify } from "@/common/utils/urlCleaner";
 import { useProducts } from "@/resources/userProduct";
 import Loader from "@/components/loader/Loader";
-import { useCart } from "../../Cart/CartContex";
+// import { useCart } from "../../Cart/CartContex";
+import { useDispatch } from "react-redux";
+import { addToCart } from "@/redux/cart/cartSlices";
 
 const SearchBar = () => {
   const navigate = useNavigate();
   const { products, isLoading, isError } = useProducts();
-  const { addToCart } = useCart();
+  const dispatch = useDispatch();
 
 
   const handleClick = (id) => {
@@ -63,7 +65,7 @@ const SearchBar = () => {
             renderInput={(params) => (
               <TextField
                 {...params}
-                placeholder="Introduceți un nume de produs, un brand sau o problemă de sănătate"
+                placeholder="Introduceți un nume de produs"
                 variant="outlined"
                 fullWidth
                 onChange={(e) => setSearchValue(e.target.value)}
@@ -116,7 +118,7 @@ const SearchBar = () => {
                     disabled={option.stock <= 0}
                     onClick={(event) => {
                       event.stopPropagation();
-                      addToCart(addToCart);
+                      dispatch(addToCart(option));
                       setSearchValue("");
                     }} // Add to cart on click
                     sx={{

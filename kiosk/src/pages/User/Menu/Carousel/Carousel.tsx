@@ -6,7 +6,9 @@ import { useNavigate } from "react-router-dom";
 import { slugify } from "@/common/utils/urlCleaner";
 import { useProducts } from "@/resources/userProduct";
 import Loader from "@/components/loader/Loader";
-import { useCart } from "../../Cart/CartContex";
+// import { useCart } from "../../Cart/CartContex";
+import { useDispatch } from "react-redux";
+import { addToCart } from "@/redux/cart/cartSlices";
 
 const responsive = {
   desktop: {
@@ -30,7 +32,7 @@ const CarouselProducts = () => {
   const { products, isLoading, isError } = useProducts();
   const navigate = useNavigate();
 
-  const { addToCart } = useCart();
+  const dispatch = useDispatch();
 
   const handleClick = (id) => {
     const slug = slugify(id);
@@ -83,7 +85,7 @@ const CarouselProducts = () => {
               <ProductCard
                 product={product}
                 onClick={() => handleClick(product.name)}
-                addToCart={addToCart} // Pass the function as is
+                addToCart={() => dispatch(addToCart(product))} // Pass the function as is
               />
             </Grid>
           ))}
