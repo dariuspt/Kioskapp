@@ -6,7 +6,7 @@ interface CartItem {
   name: string;
   price: number;
   quantity: number;
-  image_url: File;
+  image_url: string;
   // Include other properties if needed
 }
 

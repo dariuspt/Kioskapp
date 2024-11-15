@@ -3,7 +3,11 @@ import { enqueueSnackbar } from "notistack";
 import { CategoryService } from "@/resources/adminCategories";
 
 export const useCategories = () => {
-  const [categories, setCategories] = useState([]);
+  interface Category {
+    id: number;
+    name: string;
+  }
+  const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -28,36 +32,4 @@ export const useCategories = () => {
   }, []);
 
   return { categories, loading };
-};
-
-export const useSubcategories = (categoryId) => {
-  const [subcategories, setSubcategories] = useState([]);
-  const [loading, setLoading] = useState(false);
-
-  useEffect(() => {
-    if (!categoryId) {
-      setSubcategories([]);
-      return;
-    }
-
-    const fetchSubcategories = async () => {
-      setLoading(true);
-      try {
-        const data = await CategoryService.getSubcategories(categoryId);
-        setSubcategories(data);
-      } catch (error) {
-        enqueueSnackbar("Cannot fetch subcategories", { variant: "error" });
-        console.error(
-          `Error fetching subcategories for category ${categoryId}:`,
-          error
-        );
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchSubcategories();
-  }, [categoryId]);
-
-  return { subcategories, loading };
 };

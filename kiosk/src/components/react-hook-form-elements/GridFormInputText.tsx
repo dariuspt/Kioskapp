@@ -12,7 +12,6 @@ import {
   RegisterOptions,
 } from "react-hook-form";
 import { useTranslation } from "react-i18next";
-import { NUMBER_VALIDATION_RULE, STRING_VALIDATION_RULE } from "@/constants/rules"; 
 import { datagridStyles } from "@/styles/styles"; 
 
 export type Props<T extends FieldValues> = {

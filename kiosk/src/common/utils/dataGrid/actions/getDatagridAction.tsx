@@ -20,7 +20,7 @@ export interface DatagridActions {
   isNotDeletable?: boolean;
   onSave: (id: number) => void;
   onCancel: (id: number) => void;
-  onEdit?: (row: GridRowModel) => void;
+  onEdit: (row: GridRowModel) => void;
   onDelete: (id: number) => void;
 }
 

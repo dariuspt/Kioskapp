@@ -49,7 +49,7 @@ import {
     startAdornment,
     onChange: handleChange,
     inDataGrid = false,
-    xs = null,
+    xs,
     ...autocompleteProps
   }: Props<T, K>) {
     const { t } = useTranslation();

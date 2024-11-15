@@ -2,15 +2,12 @@ import { getDatagridActions } from "@/common/utils/dataGrid/actions/getDatagridA
 import { renderDataGridCellExpand } from "@/common/utils/dataGrid/helpers";
 import FormInputFile from "@/components/react-hook-form-elements/FormInputFile";
 import FormSelect from "@/components/react-hook-form-elements/FormSelect";
-import {
-  BasicRenderOption,
-  CheckboxOption,
-} from "@/components/react-hook-form-elements/formSelect/RenderOption";
+import { BasicRenderOption, CheckboxOption } from "@/components/react-hook-form-elements/formSelect/RenderOption";
 import GridCheckboxInput from "@/components/react-hook-form-elements/GridCheckboxInput";
 import GridFormInputText from "@/components/react-hook-form-elements/GridFormInputText";
 import { useCategories } from "@/resources/adminCategories";
 import { Typography } from "@mui/material";
-import { GridColDef, GridRowModes } from "@mui/x-data-grid";
+import { GridColDef, GridRowModes} from "@mui/x-data-grid";
 import { enqueueSnackbar } from "notistack";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
@@ -29,7 +26,7 @@ export const fetchCastedCategories = () => {
   });
 };
 
-const GridTextField = ({ field, id}) => {
+const GridTextField = ({ field, id }) => {
   const { control, trigger } = useFormContext();
   const name = `${id}.${field}`;
 
@@ -47,14 +44,13 @@ const renderTextfieldCell = (params) => {
 };
 
 export const GridFileInput = ({ field, id }) => {
-  const { control, trigger} = useFormContext();
+  const { control, trigger } = useFormContext();
   const name = `${id}.${field}`;
 
-
   useEffect(() => {
-    trigger();
-  }, []);
-
+    // Optionally trigger validation when the component mounts
+    trigger(name);
+  }, [name, trigger]);
 
   return <FormInputFile name={name} control={control} accept="image/*" />;
 };
@@ -154,7 +150,6 @@ export const useColumns = ({
       flex: 1,
       minWidth: 120,
       editable: true,
-      type: "number",
       renderEditCell: renderTextfieldCell,
       renderCell: renderDataGridCellExpand,
     },
@@ -164,7 +159,6 @@ export const useColumns = ({
       flex: 1,
       minWidth: 120,
       editable: true,
-      type: "number",
       renderEditCell: renderTextfieldCell,
       renderCell: renderDataGridCellExpand,
     },
@@ -177,12 +171,21 @@ export const useColumns = ({
       renderEditCell: renderDropdownCell,
       renderCell: renderDataGridCellExpand,
     },
+    // {
+    //   field: "subcategory",
+    //   headerName: "Subcategory",
+    //   flex: 1,
+    //   editable: true,
+    //   minWidth: 100,
+    //   renderEditCell: renderTextfieldCell,
+    //   renderCell: renderDataGridCellExpand,
+    // },
     {
       field: "image",
       headerName: "Image",
       flex: 1,
       editable: true,
-      minWidth: 200,
+      minWidth: 150,
       renderEditCell: (params) => {
         const { id, field } = params;
         return <GridFileInput id={id} field={field} />;

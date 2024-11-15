@@ -1,4 +1,4 @@
-import { Button, Grid} from "@mui/material";
+import { Button, Grid } from "@mui/material";
 import {
   Control,
   Controller,
@@ -42,7 +42,7 @@ export default function FormInputFile<T extends FieldValues>({
 }: Props<T>) {
   const { t } = useTranslation();
   const { setValue, trigger } = useForm();
-  const [selectedFile, setSelectedFile] = useState<File>(
+  const [selectedFile, setSelectedFile] = useState<File | null>(
     defaultSelectedFile || null
   );
 
@@ -72,12 +72,15 @@ export default function FormInputFile<T extends FieldValues>({
                   type="file"
                   hidden
                   accept={accept}
-                  onChange={(e) => {
-                    const file = e.target.files[0];
-                    field.onChange(file);
-                    setValue("file", file);
-                    setSelectedFile(file);
-                    trigger("file");
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    const files = e.target.files;
+                    if (files && files.length > 0) {
+                      const file = files[0];
+                      field.onChange(file);
+                      setValue("file", file);
+                      setSelectedFile(file);
+                      trigger("file");
+                    }
                   }}
                 />
               </Button>
