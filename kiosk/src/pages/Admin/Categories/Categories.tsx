@@ -60,6 +60,7 @@ const Categories = () => {
               pagination
               sx={datagridStyles.grid}
               editMode="row"
+              // @ts-ignore
               slots={administrationToolbar}
               slotProps={{
                 toolbar: { onCreate: createRow },

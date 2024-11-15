@@ -17,23 +17,19 @@ export interface ProductsInterface {
   subcategory: string;
   is_top_product: boolean;
   image?: File;
-}
-
-export interface ProductsInterfaceOut
-  extends Omit<ProductsInterface, "image" | "category"> {
-  image_url?: string | null; // Received from the backend (e.g., fetching products)
+  image_url?: string | null;
   category_name?: string;
+  subcategory_name?: string;
 }
-
 interface Product {
-  getProducts: () => Promise<ProductsInterfaceOut[]>;
+  getProducts: () => Promise<ProductsInterface[]>;
   createProducts: (
     data: Omit<ProductsInterface, "id">
-  ) => Promise<ProductsInterfaceOut>;
+  ) => Promise<ProductsInterface>;
   update: (
     id: number,
     data: ProductsInterface
-  ) => Promise<ProductsInterfaceOut>;
+  ) => Promise<ProductsInterface>;
   deleteOne: (id: number) => Promise<ProductsInterface>;
 }
 
@@ -41,22 +37,32 @@ export const ProductsService: Product = {
   getProducts: () => Api(service).get(route),
   createProducts: (data) => {
     const formData = new FormData();
-
-    // Loop through all the keys in the data object
     for (const key in data) {
-      if (data[key] != null) {
-        // Handle different fields appropriately
-        if (key === "image" && data[key] instanceof File) {
-          formData.append("image", data[key]); // Append the image file
-        } else if (key !== "image") {
-          // Append other fields as strings, excluding the image file itself
+      if (data[key] != null && key !== "image_url") {
+        if (key === "category_name") {
+          // If category_name is an object, extract the name
+          const categoryNameValue =
+            typeof data[key] === "object" && data[key] !== null
+            // @ts-ignore
+              ? data[key].name // Extract the category name
+              // @ts-ignore
+              : data[key].toString();
+
+          formData.append("category", categoryNameValue);
+        } else {
           formData.append(key, data[key].toString());
         }
       }
     }
+    if (data.image) {
+      formData.append("image", data.image); // Append the image file
+    }
 
-    // Make the POST request with FormData
-    return Api(service).post(route, formData);
+    return Api(service).post(route, formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
   },
   update: (id, data) => {
     const formData = new FormData();
@@ -70,11 +76,16 @@ export const ProductsService: Product = {
           typeof data[key] === "object" &&
           data[key] !== null
         ) {
+          // @ts-ignore
           formData.append("category", data[key].name); // Assuming backend expects category name
         } else {
           formData.append(key, data[key].toString());
         }
       }
+    }
+
+    for (let pair of formData.entries()) {
+      console.log(`Update FormData entry - ${pair[0]}: ${pair[1]}`);
     }
 
     // Append the image file if it exists

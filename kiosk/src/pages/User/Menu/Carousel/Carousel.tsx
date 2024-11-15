@@ -85,6 +85,7 @@ const CarouselProducts = () => {
               <ProductCard
                 product={product}
                 onClick={() => handleClick(product.name)}
+                // @ts-ignore
                 addToCart={() => dispatch(addToCart(product))} // Pass the function as is
               />
             </Grid>

@@ -153,15 +153,15 @@ export const useDatagridData = ({
   }
 
   async function handleRequestCreate(data: ProductsInterface, id: number) {
-    // Ensure price and stock are numbers and prepare the API data properly
+    // Ensure price and stock are numbers
     const apiData = {
       ...trimObjectStrings(data),
       price: Number(data.price),
       stock: Number(data.stock),
-      image: data.image, // Ensure this is an instance of File
+      image: data.image,
     };
   
-    console.log("Data being sent to create product:", apiData); // Log the data to verify
+    console.log("Data being sent to create product:", apiData); // Log the data to verify if everything is correct
   
     try {
       const response = await create(apiData);
@@ -170,8 +170,8 @@ export const useDatagridData = ({
           if (!current) return [];
           return [...current, response];
         });
-        onCreateSuccess();
       }
+      onCreateSuccess();
     } catch (error) {
       console.error("Error creating product:", error); // Log any error that occurs during product creation
       onCreateError();

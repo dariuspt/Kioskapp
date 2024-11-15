@@ -59,19 +59,6 @@ export const ProductCard = ({ product, onClick, addToCart }: Props) => {
         >
           {product.name}
         </Typography>
-        {/* <Typography
-          variant="body2"
-          color="textSecondary"
-          gutterBottom
-          sx={{
-            display: "-webkit-box",
-            overflow: "hidden",
-            WebkitBoxOrient: "vertical",
-            WebkitLineClamp: 3, // Limit the description to 3 lines
-          }}
-        >
-          {product.description} */}
-        {/* </Typography> */}
         <Divider sx={{ my: 5 }} />
         <Typography variant="h5" color="error">
           {product.price} Lei

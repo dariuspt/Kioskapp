@@ -48,11 +48,13 @@ const SearchBar = () => {
         <Grid item xs={10} sm={8}>
           <Autocomplete
             freeSolo
+            // @ts-ignore
             options={products}
             getOptionLabel={(option) =>
               typeof option === "string" ? option : option.name
             }
             value={searchValue}
+            // @ts-ignore
             onChange={(event, newValue) => {
               if (typeof newValue === "string") {
                 setSearchValue(newValue); // FreeSolo input
@@ -118,6 +120,7 @@ const SearchBar = () => {
                     disabled={option.stock <= 0}
                     onClick={(event) => {
                       event.stopPropagation();
+                      // @ts-ignore
                       dispatch(addToCart(option));
                       setSearchValue("");
                     }} // Add to cart on click

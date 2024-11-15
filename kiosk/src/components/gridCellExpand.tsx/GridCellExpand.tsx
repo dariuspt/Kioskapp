@@ -1,5 +1,5 @@
 import { Box, Paper, Popper, Typography } from "@mui/material";
-import React, { memo, useRef, useState } from "react";
+import { memo, useRef, useState } from "react";
 
 import { classes } from "./styles";
 
@@ -21,12 +21,13 @@ export const GridCellExpand = memo((props: GridCellExpandProps) => {
   const isOverflown = (element: Element): boolean =>
     element.scrollHeight > element.clientHeight ||
     element.scrollWidth > element.clientWidth;
-
   const handleMouseEnter = () => {
-    const isCurrentlyOverflown = isOverflown(cellValue.current);
-    setShowPopper(isCurrentlyOverflown);
-    setAnchorEl(cellDiv.current);
-    setShowFullCell(true);
+    if (cellValue.current && cellDiv.current) {
+      const isCurrentlyOverflown = isOverflown(cellValue.current);
+      setShowPopper(isCurrentlyOverflown);
+      setAnchorEl(cellDiv.current);
+      setShowFullCell(true);
+    }
   };
 
   return (

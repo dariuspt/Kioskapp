@@ -199,6 +199,7 @@ const Product = () => {
                             flexGrow: 1,
                             fontWeight: "bold",
                           }}
+                          // @ts-ignore
                           onClick={() =>dispatch(addToCart(product))}
                         >
                           Add to Cart

@@ -14,10 +14,14 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 // import { useCart } from "./CartContex"; // Import useCart hook
 import { useState } from "react";
 import CartSummaryModal from "@/components/modal/Modal";
-import { OrdersService } from "@/resources/orders";
+import { OrdersIn, OrdersService } from "@/resources/orders";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
-import { clearCart, decreaseQuantity, increaseQuantity } from "@/redux/cart/cartSlices";
+import {
+  clearCart,
+  decreaseQuantity,
+  increaseQuantity,
+} from "@/redux/cart/cartSlices";
 
 const Cart = () => {
   const cartItems = useSelector((state: RootState) => state.cart.items);
@@ -29,28 +33,24 @@ const Cart = () => {
     (acc, item) => acc + item.price * item.quantity,
     0
   );
-
   const handleConfirm = async () => {
     try {
-      // Loop through cartItems and create an order for each item
-      const orderData = {
-        products: cartItems.map((item) => ({
+      for (const item of cartItems) {
+        const orderData: OrdersIn = {
           product_id: item.id,
           quantity: item.quantity,
-        })),
-      };
+        };
         await OrdersService.createOrder(orderData);
-
-      // Clear the cart, close modal, and show sale confirmation
-      dispatch(clearCart());  // Clear the cart
-      setModalOpen(false); // Close the cart summary modal
-      setSaleCompletedModalOpen(true); // Open the sale completed modal
+      }
+      // Clear the cart and update UI
+      dispatch(clearCart());
+      setModalOpen(false);
+      setSaleCompletedModalOpen(true);
     } catch (error) {
       console.error("Failed to create order", error);
-      // Handle the error appropriately (you can show an alert or a snackbar here)
+      // Handle the error appropriately
     }
   };
-
   return (
     <Box sx={{ width: 400, padding: 2 }}>
       <Typography variant="h5" sx={{ marginBottom: 2, marginTop: 2 }}>
@@ -74,7 +74,7 @@ const Cart = () => {
                 component="img"
                 sx={{ width: 100, height: 150, objectFit: "contain" }}
                 image={item.image_url}
-                alt={item.title}
+                alt={item.name}
               />
               <CardContent sx={{ flex: 1 }}>
                 <Typography variant="h6" sx={{ fontWeight: "bold" }}>
