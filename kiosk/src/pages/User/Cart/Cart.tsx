@@ -14,14 +14,9 @@ import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 // import { useCart } from "./CartContex"; // Import useCart hook
 import { useState } from "react";
 import CartSummaryModal from "@/components/modal/Modal";
-import { OrdersIn, OrdersService } from "@/resources/orders";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "@/redux/store/store";
-import {
-  clearCart,
-  decreaseQuantity,
-  increaseQuantity,
-} from "@/redux/cart/cartSlices";
+import { clearCart, decreaseQuantity, increaseQuantity } from "@/redux/cart/cartSlices";
 
 const Cart = () => {
   const cartItems = useSelector((state: RootState) => state.cart.items);
@@ -33,24 +28,29 @@ const Cart = () => {
     (acc, item) => acc + item.price * item.quantity,
     0
   );
+
   const handleConfirm = async () => {
     try {
-      for (const item of cartItems) {
-        const orderData: OrdersIn = {
+      // Loop through cartItems and create an order for each item
+      const orderData = {
+        products: cartItems.map((item) => ({
           product_id: item.id,
           quantity: item.quantity,
-        };
+        })),
+      };
+      // @ts-ignore
         await OrdersService.createOrder(orderData);
-      }
-      // Clear the cart and update UI
-      dispatch(clearCart());
-      setModalOpen(false);
-      setSaleCompletedModalOpen(true);
+
+      // Clear the cart, close modal, and show sale confirmation
+      dispatch(clearCart());  // Clear the cart
+      setModalOpen(false); // Close the cart summary modal
+      setSaleCompletedModalOpen(true); // Open the sale completed modal
     } catch (error) {
       console.error("Failed to create order", error);
-      // Handle the error appropriately
+      // Handle the error appropriately (you can show an alert or a snackbar here)
     }
   };
+
   return (
     <Box sx={{ width: 400, padding: 2 }}>
       <Typography variant="h5" sx={{ marginBottom: 2, marginTop: 2 }}>

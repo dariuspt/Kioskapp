@@ -16,7 +16,6 @@ export interface OrdersOut {
 export interface OrdersIn {
   product_id: number;
   quantity: number;
-  products?: ProductsInterface[];
 }
 interface Orders {
   createOrder: (data: OrdersIn) => Promise<OrdersOut>;
