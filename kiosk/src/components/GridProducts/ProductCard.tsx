@@ -42,7 +42,7 @@ export const ProductCard = ({ product, onClick, addToCart }: Props) => {
         height="250"
         image={product.image_url}
         alt={product.title}
-        sx={{ objectFit: "contain" }}
+        sx={{ objectFit: "" }}
       />
       <CardContent sx={{ flexGrow: 1 }}>
         <Typography
@@ -59,6 +59,7 @@ export const ProductCard = ({ product, onClick, addToCart }: Props) => {
         >
           {product.name}
         </Typography>
+
         <Divider sx={{ my: 5 }} />
         <Typography variant="h5" color="error">
           {product.price} Lei
